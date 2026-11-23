@@ -27,6 +27,30 @@ document.addEventListener('error', (e) => {
   if (el instanceof HTMLImageElement && el.classList.contains('photo')) el.outerHTML = placeholder(el.dataset.ph);
 }, true);
 
+/* ---------- dates from photo ids (img-YYYYMMDD-…, whatsapp-image-YYYY-MM-DD-…) ---------- */
+const BORN_MS = Date.parse(`${CONTENT.born}T00:00:00+05:30`);
+const MONTHS3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function photoDate(id) {
+  const m = /(\d{4})-?(\d{2})-?(\d{2})/.exec(id);
+  if (!m) return null;
+  const [y, mo, d] = m.slice(1).map(Number);
+  return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? { y, mo, d } : null;
+}
+
+// "22 Feb" + "2 months old" for a photo id; null when the id carries no date.
+function photoCaption(id) {
+  const t = photoDate(id);
+  if (!t) return null;
+  const b = new Date(BORN_MS + 5.5 * 3600e3); // IST calendar date of birth
+  let months = (t.y - b.getUTCFullYear()) * 12 + (t.mo - 1 - b.getUTCMonth());
+  if (t.d < b.getUTCDate()) months--;
+  const age = months < 1 ? 'a few weeks old' : `${months} month${months > 1 ? 's' : ''} old`;
+  return { date: `${t.d} ${MONTHS3[t.mo - 1]}`, age };
+}
+
+const daysOld = () => Math.max(0, Math.floor((now() - BORN_MS) / 864e5));
+
 /* ---------- links ---------- */
 const gcalStamp = (ms) => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 

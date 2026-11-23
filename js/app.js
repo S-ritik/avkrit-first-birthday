@@ -6,6 +6,7 @@ const $ = (sel, root = document) => root.querySelector(sel);
 
 function boot() {
   document.body.classList.add(VARIANT);
+  document.body.insertAdjacentHTML('afterbegin', partyBackdrop());
   $('#app').innerHTML = renderPage(VARIANT);
   if (VARIANT === 'A') {
     requestAnimationFrame(buildArch);
@@ -18,17 +19,49 @@ function boot() {
   initRsvp();
   initWishes();
   initLightbox();
+  initDock();
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) initReveal();
 }
 
-/* ---------- intro: balloons float up and reveal the page ---------- */
+/* ---------- scroll reveal: cards rise in as they enter the screen ---------- */
+function initReveal() {
+  if (!('IntersectionObserver' in window)) return;
+  const els = document.querySelectorAll('.sec h2, .eyebrow, .cd-u, .invite-card, .timeline li, .ticket, .pola, .A-months .m, .C-months .pc, .stat, .wish, .yr');
+  const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  els.forEach((el, i) => { el.classList.add('rv'); el.style.setProperty('--rd', `${(i % 3) * 70}ms`); io.observe(el); });
+}
+
+/* ---------- dock: show quick actions after the hero, hide over the footer ---------- */
+function initDock() {
+  const dock = $('.dock');
+  if (!dock || !('IntersectionObserver' in window)) return;
+  const seen = { hero: true, footer: false };
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { seen[e.target.id] = e.isIntersecting; });
+    dock.classList.toggle('show', !seen.hero && !seen.footer);
+  });
+  io.observe($('#hero'));
+  io.observe($('#footer'));
+}
+
+/* ---------- intro: an envelope opens, the invitation card slides out, balloons fly off ---------- */
 function playIntro() {
   const el = document.createElement('div');
   el.id = 'intro';
   seed = 3;
   el.innerHTML = `<div class="bg"></div>` + Array.from({ length: 34 }, () => {
     const w = 54 + rnd() * 44, x = rnd() * 100, y = 8 + rnd() * 95;
-    return `<div class="ib" style="left:calc(${x}% - ${w / 2}px);top:${y}%;--d:${1.5 + rnd() * 0.8}s;--delay:${0.5 + rnd() * 0.6}s;--rot:${(rnd() - 0.5) * 40}deg">${BALLOON(PARTY[Math.floor(rnd() * 7)], w)}</div>`;
-  }).join('') + `<div class="hello">${CROWN}<div class="t">${esc(CONTENT.name)} turns 1</div></div><div class="skip">tap to skip</div>`;
+    return `<div class="ib" style="left:calc(${x}% - ${w / 2}px);top:${y}%;--d:${1.5 + rnd() * 0.8}s;--delay:${1.5 + rnd() * 0.6}s;--rot:${(rnd() - 0.5) * 40}deg">${BALLOON(PARTY[Math.floor(rnd() * 7)], w)}</div>`;
+  }).join('') + `
+    <div class="hello"><div class="env">
+      <div class="env-back"></div>
+      <div class="env-card">${CROWN}<div class="t">${esc(CONTENT.name)} turns 1</div><div class="s">You're invited!</div></div>
+      <div class="env-front"></div><div class="env-flap"></div>
+      <div class="env-seal">${esc(CONTENT.name[0])}</div>
+    </div></div>
+    <div class="skip">tap to skip</div>`;
   document.body.appendChild(el);
   let timer;
   const done = () => {
@@ -36,7 +69,7 @@ function playIntro() {
     el.classList.add('out');
     setTimeout(() => el.remove(), 350);
   };
-  timer = setTimeout(done, 2600);
+  timer = setTimeout(done, 3300);
   el.addEventListener('pointerdown', done, { once: true });
 }
 
@@ -72,7 +105,10 @@ function startCountdown() {
   const pad = (n) => String(n).padStart(2, '0');
   const tick = () => {
     const left = PARTY_START_MS - now();
+    const days = daysOld();
+    $('[data-yr]').style.width = `${Math.min(100, Math.max(0, ((now() - BORN_MS) / (PARTY_START_MS - BORN_MS)) * 100)).toFixed(2)}%`;
     if (left <= 0) {
+      $('[data-age]').textContent = '';
       $('[data-cd]').hidden = true;
       $('.cd-done').hidden = false;
       closeRsvp();
@@ -82,6 +118,8 @@ function startCountdown() {
     const s = Math.floor(left / 1000);
     const parts = { d: Math.floor(s / 86400), h: Math.floor(s / 3600) % 24, m: Math.floor(s / 60) % 60, s: s % 60 };
     for (const [k, v] of Object.entries(parts)) $(`[data-u="${k}"]`).textContent = pad(v);
+    const sleeps = parts.d + (parts.h || parts.m || parts.s ? 1 : 0);
+    $('[data-age]').innerHTML = `${esc(CONTENT.name)} is <b>${days}</b> days old · just <b>${sleeps}</b> sleep${sleeps === 1 ? '' : 's'} to go!`;
   };
   const iv = setInterval(tick, 1000);
   tick();
@@ -225,23 +263,49 @@ function initWishes() {
   });
 }
 
-/* ---------- gallery lightbox: open on tap; close on tap, Esc or back ---------- */
+/* ---------- gallery lightbox: open on tap; ‹ › / arrows / swipe to browse; close on tap, Esc or back ---------- */
 function initLightbox() {
   const lb = $('#lightbox');
   const img = $('img', lb);
+  const cap = $('figcaption', lb);
+  const cards = [...document.querySelectorAll('.pola')];
+  let at = 0;
   const hide = () => { lb.hidden = true; img.removeAttribute('src'); };
   const close = () => { if (!lb.hidden) history.state && history.state.lb ? history.back() : hide(); };
+  const show = (i) => {
+    at = (i + cards.length) % cards.length;
+    const id = cards[at].dataset.id, c = photoCaption(id);
+    img.src = photoSrc(id, 'lg');
+    img.alt = c ? `${CONTENT.name}, ${c.date}` : CONTENT.name;
+    cap.textContent = `${c ? `${c.date} · ${c.age}` : CONTENT.name}   ${at + 1} / ${cards.length}`;
+  };
 
   $('.polas').addEventListener('click', (e) => {
     const card = e.target.closest('.pola');
     if (!card) return;
-    img.src = photoSrc(card.dataset.id, 'lg');
-    img.alt = CONTENT.name;
+    show(cards.indexOf(card));
     lb.hidden = false;
     history.pushState({ lb: 1 }, '');
   });
-  lb.addEventListener('click', close);
-  addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  lb.addEventListener('click', (e) => {
+    const nav = e.target.closest('.lb-nav');
+    if (nav) return show(at + (nav.classList.contains('next') ? 1 : -1));
+    close();
+  });
+  let x0 = null;
+  lb.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 50) { e.preventDefault(); show(at + (dx < 0 ? 1 : -1)); }
+  });
+  addEventListener('keydown', (e) => {
+    if (lb.hidden) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowRight') show(at + 1);
+    else if (e.key === 'ArrowLeft') show(at - 1);
+  });
   addEventListener('popstate', () => { if (!lb.hidden) hide(); });
 }
 

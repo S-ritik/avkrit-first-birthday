@@ -23,11 +23,55 @@ const BALLOON = (c, w, extra = '') => `<svg width="${w}" viewBox="0 0 40 80" ${e
   <path d="M20 2 C8 2 2 12 2 22 C2 34 12 44 20 46 C28 44 38 34 38 22 C38 12 32 2 20 2Z" fill="${c}"/>
   <ellipse cx="13" cy="15" rx="4" ry="7.5" fill="#fff" opacity=".38" transform="rotate(-22 13 15)"/>
   <path d="M17 46 L23 46 L20 50Z" fill="${c}"/><path d="M20 50 q-5 8 0 15 q4 7 0 15" stroke="#6b6b80" fill="none" stroke-width=".9"/></svg>`;
+// Marigold toran (door garland): swags of genda flowers with mango leaves and bells.
+const GARLAND = () => {
+  const W = 400, N = 4, sw = W / N, sag = 13;
+  let str = '', leaves = '', flowers = '', bells = '';
+  for (let i = 0; i < N; i++) {
+    const x0 = i * sw, x1 = x0 + sw;
+    str += `<path d="M${x0} 5 Q${x0 + sw / 2} ${5 + 2 * sag} ${x1} 5" fill="none" stroke="#8a5a00" stroke-width="1.2"/>`;
+    for (let k = 0; k < 8; k++) {
+      const t = (k + 0.5) / 8, x = x0 + t * sw, y = 5 + 4 * sag * t * (1 - t);
+      if (k % 2) leaves += `<ellipse cx="${x.toFixed(1)}" cy="${(y + 10).toFixed(1)}" rx="3.2" ry="8" fill="${k % 4 === 1 ? '#3a9d3a' : '#5cb338'}" transform="rotate(${(t - 0.5) * 30} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+      const [c, d] = k % 2 ? ['#ffc21a', '#e89b00'] : ['#ff8c1a', '#d95f00'];
+      flowers += `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><circle r="7" fill="${c}"/><circle r="5.6" fill="none" stroke="${d}" stroke-width="2.4" stroke-dasharray="1.8 1.4"/><circle r="2" fill="${d}"/></g>`;
+    }
+  }
+  for (let i = 0; i <= N; i++) {
+    const x = Math.min(W - 6, Math.max(6, i * sw));
+    bells += `<path d="M${x} 4 V28" stroke="#c98f00" stroke-width="1.2"/><circle cx="${x}" cy="8" r="6" fill="#e53950"/><path d="M${x - 5} 36 Q${x} 22 ${x + 5} 36Z" fill="#f5c542" stroke="#a87b12" stroke-width="1"/><circle cx="${x}" cy="37.5" r="1.6" fill="#a87b12"/>`;
+  }
+  return `<svg class="toran" viewBox="0 0 ${W} 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${str}${leaves}${flowers}${bells}</svg>`;
+};
+// Two garlands side by side; the second only shows on wide screens so the toran stays short.
+const TORAN = () => `<div class="torans">${GARLAND()}${GARLAND()}</div>`;
+
 const RAINBOW = ['#f0453a', '#ff8c2a', '#ffd23f', '#2fbf55', '#3d7bf0', '#8e44ad'];
 const PARTY = ['#f0453a', '#ff8c2a', '#ffd23f', '#2fbf55', '#3d7bf0', '#8e44ad', '#ff6fb5', '#ffffff'];
+const STAR = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" fill="#ffc928"/><circle cx="12" cy="12" r="2.4" fill="#fff"/></svg>`;
 
 let seed = 11;
 const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+
+/* Fixed party backdrop the glass cards float over: balloon-colour orbs, confetti, sparkles, drifting balloons. */
+function partyBackdrop() {
+  seed = 21;
+  const pct = () => (rnd() * 100).toFixed(1);
+  const PASTEL = ['#ff8fab', '#ffd166', '#7cc8ff', '#ffb38a', '#c3a6ff', '#8be0b4'];
+  const orbs = [[6, 10, 48], [92, 6, 40], [84, 46, 54], [4, 58, 46], [58, 92, 50], [34, 30, 30], [98, 86, 36]]
+    .map(([x, y, s], i) => `<i class="orb" style="left:${x}%;top:${y}%;--s:${s}vmax;--c:${PASTEL[i % 6]}"></i>`).join('');
+  const confetti = Array.from({ length: 46 }, () => {
+    const w = 4 + rnd() * 6, dot = rnd() < 0.35;
+    return `<i class="cf" style="left:${pct()}%;top:${pct()}%;width:${w.toFixed(1)}px;height:${(dot ? w : w * 2.2).toFixed(1)}px;`
+      + `background:${PARTY[Math.floor(rnd() * 7)]};border-radius:${dot ? '50%' : '1px'};rotate:${Math.round(rnd() * 360)}deg"></i>`;
+  }).join('');
+  const sparkles = Array.from({ length: 12 }, () =>
+    `<i class="tw" style="left:${pct()}%;top:${pct()}%;--w:${Math.round(10 + rnd() * 14)}px;--d:${(2 + rnd() * 3).toFixed(1)}s">${STAR}</i>`).join('');
+  const balloons = Array.from({ length: 6 }, (_, i) =>
+    `<div class="fb" style="left:${(4 + i * 16 + rnd() * 6).toFixed(1)}%;--d:${(24 + rnd() * 14).toFixed(1)}s;--delay:${(-rnd() * 34).toFixed(1)}s">`
+    + `${BALLOON(PARTY[(i * 3) % 7], Math.round(34 + rnd() * 24))}</div>`).join('');
+  return `<div class="party-bg" aria-hidden="true">${orbs}${confetti}${sparkles}${balloons}</div>`;
+}
 
 const C_ = CONTENT;
 const heroImg = () => photo(C_.hero.id, { pos: C_.hero.pos, size: 'lg', eager: true, alt: `${C_.name} in front of a Happy Birthday backdrop` });
@@ -35,6 +79,15 @@ const ganeshImg = () => photo(C_.littleGanesh.id, { pos: C_.littleGanesh.pos, al
 const monthId = (m) => m.id || `months/m${String(m.n).padStart(2, '0')}`;
 const monthImg = (m) => photo(monthId(m), { pos: m.pos, alt: `${C_.name} at ${m.n} months`, ph: 'Coming soon' });
 const monthLabel = (m) => `${m.n} month${m.n > 1 ? 's' : ''}`;
+const tag = (t) => (t ? `<em class="tag">${esc(t)}</em>` : '');
+const slogan = (k) => (C_.slogans && C_.slogans[k]) || '';
+const subLine = (k) => (slogan(k) ? `<p class="sub slogan">${esc(slogan(k))}</p>` : '');
+
+// Scrolling band of catchy lines. List is doubled so the loop is seamless.
+const ribbon = (items, cls = '') => (items && items.length ? `
+  <div class="ribbon ${cls}" aria-hidden="true"><div class="rb-track">
+    ${[...items, ...items].map((t) => `<span>${esc(t)}</span>`).join('')}
+  </div></div>` : '');
 
 const blessingTop = () => `
   <div class="ganesh"><img src="${esc(C_.ganeshImg)}" alt="Shri Ganesh"></div>
@@ -50,6 +103,7 @@ const shlokaBlock = () => `
 const HERO = {
   A: () => `
     <section class="A-hero" id="hero">
+      ${TORAN()}
       <div class="top">
         ${blessingTop()}
         <div class="lg">${ganeshImg()}</div>
@@ -65,12 +119,13 @@ const HERO = {
       </div>
       <div class="stage">
         <h1 class="sr">${esc(C_.headline)}</h1>
-        <div class="marquee" aria-hidden="true">${[...C_.name.toUpperCase()].map((l) => `<span>${l}</span>`).join('')}</div>
+        <div class="marquee" aria-hidden="true">${[...C_.name.toUpperCase()].map((l, i) => `<span style="--i:${i}">${l}</span>`).join('')}</div>
         <div class="turns" aria-hidden="true">turns <b>1</b></div>
         ${BUS('bus')}${MELON('melon')}${MELON('melon melon2')}
         <div style="height:34px"></div>
       </div>
       <div class="info">
+        ${slogan('hero') ? `<p class="tagline">${esc(slogan('hero'))}</p>` : ''}
         <div class="pill">${esc(C_.dateText)} · 6:30 PM</div>
         <div class="venue">📍 ${esc(C_.venue.name)}</div>
         <div class="scroll-cue">Scroll</div>
@@ -79,9 +134,13 @@ const HERO = {
 
   C: () => `
     <section class="C-hero" id="hero">
+      ${TORAN()}
+      <div class="h-left">
       ${blessingTop()}
       <div class="lg">${ganeshImg()}<div class="cap">our little Ganesha</div></div>
       ${shlokaBlock()}
+      </div>
+      <div class="h-right">
       <div class="bunch">
         ${BALLOON('#ff6fb5', 58, 'style="left:22%;top:18px;transform:rotate(-14deg)"')}
         ${BALLOON('#3d7bf0', 64, 'style="left:36%;top:0;transform:rotate(-4deg)"')}
@@ -91,8 +150,10 @@ const HERO = {
       </div>
       <div class="polaroid"><div class="tape"></div>${CROWN}<div class="ph">${heroImg()}</div><div class="cap">${esc(C_.name)}</div></div>
       <h1><span class="sr">${esc(C_.headline)}</span><span aria-hidden="true">Our Little Prince<br>${esc(C_.name)} turns <em>one</em></span></h1>
+      ${slogan('hero') ? `<p class="tagline">${esc(slogan('hero'))}</p>` : ''}
       <div class="meta"><b>${esc(C_.dateText)}</b><br>${esc(C_.timeText)} · 📍 ${esc(C_.venue.name)}</div>
       <div class="scroll-cue">Scroll</div>
+      </div>
       <div class="hill">
         <svg class="ground" viewBox="0 0 400 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M0 70 Q100 20 210 60 T400 50 V130 H0Z" fill="#9ad96b"/><path d="M0 95 Q140 55 260 90 T400 85 V130 H0Z" fill="#6cc04a"/></svg>
@@ -105,58 +166,89 @@ const HERO = {
 const MONTHS_SEC = {
   A: () => `
     <section class="A-months" id="months">
+      ${slogan('months') ? eyebrow(slogan('months')) : ''}
       <h2>12 Little Birthdays</h2>
       <div class="sub">Every 4th, we celebrated one more month of ${esc(C_.name)}</div>
       <div class="grid">
         ${C_.months.map((m, i) => `<div class="m" style="--c:${RAINBOW[i % 6]}">
           <div class="ball">${monthImg(m)}</div><div class="knot"></div><div class="str"></div>
-          <div class="lbl">${monthLabel(m)}<small>${esc(m.date)}</small></div></div>`).join('')}
+          <div class="lbl">${monthLabel(m)}<small>${esc(m.date)}</small>${tag(m.tag)}</div></div>`).join('')}
         <div class="m big" style="--c:#f5c542">
           <div class="ball"><b>1</b></div><div class="knot"></div><div class="str"></div>
-          <div class="lbl">1 year!<small>4 Dec · see you there</small></div></div>
+          <div class="lbl">1 year!<small>4 Dec · see you there</small>${tag(slogan('yearTile'))}</div></div>
       </div>
+      ${firstYear()}
     </section>`,
 
   C: () => `
     <section class="C-months" id="months">
+      ${slogan('months') ? eyebrow(slogan('months')) : ''}
       <h2>12 Little Birthdays</h2>
       <div class="sub">Every 4th, we celebrated one more month of ${esc(C_.name)}</div>
       <div class="hint">swipe →</div>
       <div class="line"><div class="row">
-        ${C_.months.map((m, i) => `<div class="pc" style="--r:${[-3, 2, -2, 3][i % 4]}deg"><div class="peg"></div>
-          <div class="ph">${monthImg(m)}</div><div class="cap">${monthLabel(m)}<small>${esc(m.date)}</small></div></div>`).join('')}
-        <div class="pc big" style="--r:2deg"><div class="peg"></div><div class="ph"><b>1</b></div>
-          <div class="cap">1 year!<small>4 Dec · see you there</small></div></div>
+        ${C_.months.map((m, i) => `<div class="slot"><div class="pc" style="--r:${[-3, 2, -2, 3][i % 4]}deg"><div class="peg"></div>
+          <div class="ph">${monthImg(m)}</div><div class="cap">${monthLabel(m)}<small>${esc(m.date)}</small>${tag(m.tag)}</div></div></div>`).join('')}
+        <div class="slot"><div class="pc big" style="--r:2deg"><div class="peg"></div><div class="ph"><b>1</b></div>
+          <div class="cap">1 year!<small>4 Dec · see you there</small>${tag(slogan('yearTile'))}</div></div></div>
       </div></div>
+      ${firstYear()}
     </section>`,
 };
 
 /* ---------- shared sections ---------- */
+const eyebrow = (t) => `<p class="eyebrow">${esc(t)}</p>`;
+
+const firstYear = () => `
+  <div class="first-year">
+    <h3>${esc(C_.name)}'s first year in numbers</h3>
+    <div class="stats">
+      ${C_.firstYear.map((f) => `<div class="stat"><span aria-hidden="true">${f.icon || ''}</span><b>${esc(f.value)}</b><small>${esc(f.label)}</small></div>`).join('')}
+    </div>
+  </div>`;
+
+// Party date parts in IST, for the ticket stub.
+const partyParts = () => {
+  const d = new Date(PARTY_START_MS + 5.5 * 3600e3);
+  return { wd: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getUTCDay()], d: d.getUTCDate(), mo: MONTHS3[d.getUTCMonth()], y: d.getUTCFullYear() };
+};
 const countdownSec = () => `
   <section class="sec countdown" id="countdown">
+    ${eyebrow('Save the date')}
     <h2>Counting down</h2>
+    ${subLine('countdown')}
     <div class="cd" data-cd>
       ${[['d', 'days'], ['h', 'hours'], ['m', 'mins'], ['s', 'secs']].map(([k, l], i) =>
         `<div class="cd-u" style="--c:${RAINBOW[[0, 4, 3, 1][i]]}"><b data-u="${k}">00</b><span>${l}</span></div>`).join('')}
     </div>
     <p class="cd-done" hidden>${esc(C_.name)} is 1! 🎉</p>
+    <div class="yr" aria-hidden="true">
+      <div class="yr-bar"><i data-yr></i><span class="yr-cake">🎂</span></div>
+      <div class="yr-ends"><span>Born · 4 Dec 2025</span><span>1st birthday</span></div>
+    </div>
+    <p class="cd-note" data-age></p>
   </section>`;
 
 const hostsSec = () => `
   <section class="sec hosts" id="hosts">
+   <div class="invite-card">
+    ${eyebrow("You're invited")}
     <p class="lead">${esc(C_.hosts.lead)}</p>
     <p class="hosts-names">${esc(C_.hosts.names)}</p>
     <p>${esc(C_.hosts.line)}</p>
-    <p class="star">${CROWN}${esc(C_.name)}</p>
+    <p class="star">${CROWN}<span class="foil">${esc(C_.name)}</span></p>
     <h3>With love from</h3>
     <div class="family">
       ${C_.family.map((f) => `<div class="fam"><span>${esc(f.role)}</span>${esc(f.names)}</div>`).join('')}
     </div>
+   </div>
   </section>`;
 
 const scheduleSec = () => `
   <section class="sec schedule" id="schedule">
+    ${eyebrow('Order of the evening')}
     <h2>The Celebration</h2>
+    ${subLine('schedule')}
     <p class="date">${esc(C_.dateText)}</p>
     <ol class="timeline">
       ${C_.schedule.map((s) => `<li><div class="ic" aria-hidden="true">${s.icon}</div>
@@ -166,8 +258,13 @@ const scheduleSec = () => `
 
 const venueSec = () => `
   <section class="sec venue" id="venue">
+    ${eyebrow('Where to find us')}
     <h2>Venue</h2>
-    <p class="place">📍 ${esc(C_.venue.name)}</p>
+    ${(() => { const p = partyParts(); return `<div class="ticket">
+      <div class="stub"><span>${p.wd}</span><b>${p.d}</b><span>${p.mo} ${p.y}</span></div>
+      <div class="tk-body"><small>Admit</small><b class="tk-who">You &amp; your family</b>
+        <p>🕡 ${esc(C_.timeText)}</p><p class="place">📍 ${esc(C_.venue.name)}</p></div>
+    </div>`; })()}
     <div class="btns">
       <a class="btn" id="directions" href="${esc(C_.venue.mapUrl)}" target="_blank" rel="noopener">Get directions</a>
       <a class="btn alt" id="add-cal" href="${esc(calendarUrl())}" target="_blank" rel="noopener">Add to Google Calendar</a>
@@ -183,12 +280,19 @@ const gallerySec = () => {
   seed = 7;
   return `
   <section class="sec gallery" id="gallery">
+    ${eyebrow('Our favourite memories')}
     <h2>Moments with ${esc(C_.name)}</h2>
+    ${subLine('gallery')}
     <p class="sub">Tap a photo to see it bigger</p>
     <div class="polas">
-      ${galleryIds().map((p) => `<button class="pola" type="button" data-id="${esc(p.id)}"
-        style="--r:${((rnd() - 0.5) * 8).toFixed(1)}deg;--y:${Math.round(rnd() * 10)}px">
-        <span class="ph" style="aspect-ratio:${p.w}/${p.h}">${photo(p.id, { alt: `${C_.name}` })}</span></button>`).join('')}
+      ${galleryIds().map((p) => {
+        const cap = photoCaption(p.id);
+        return `<button class="pola" type="button" data-id="${esc(p.id)}"
+        style="--r:${((rnd() - 0.5) * 8).toFixed(1)}deg;--y:${Math.round(rnd() * 10)}px;--tr:${((rnd() - 0.5) * 16).toFixed(1)}deg;--tc:${['#ffe58a', '#ffc2d9', '#bfe6ff', '#c8f0b0'][Math.floor(rnd() * 4)]}">
+        <span class="tape" aria-hidden="true"></span>
+        <span class="ph" style="aspect-ratio:${p.w}/${p.h}">${photo(p.id, { alt: cap ? `${C_.name}, ${cap.date}` : C_.name })}</span>
+        ${cap ? `<span class="cap">${esc(cap.date)}<small>${esc(cap.age)}</small></span>` : ''}</button>`;
+      }).join('')}
     </div>
   </section>`;
 };
@@ -197,7 +301,9 @@ const honeypot = `<input class="hp" name="website" tabindex="-1" autocomplete="o
 
 const rsvpSec = () => `
   <section class="sec rsvp" id="rsvp">
+    ${eyebrow('Kindly reply')}
     <h2>Will you join us?</h2>
+    ${subLine('rsvp')}
     <form id="rsvp-form" novalidate>
       <label class="field">Your name
         <input name="name" maxlength="60" autocomplete="name" required></label>
@@ -222,7 +328,9 @@ const rsvpSec = () => `
 
 const wishesSec = () => `
   <section class="sec wishes" id="wishes">
+    ${eyebrow('Leave a blessing')}
     <h2>Wishes for ${esc(C_.name)}</h2>
+    ${subLine('wishes')}
     <form id="wish-form" novalidate>
       <label class="field">Your name
         <input name="name" maxlength="60" autocomplete="name" required></label>
@@ -240,25 +348,37 @@ const wishesSec = () => `
 
 const footerSec = () => `
   <footer class="sec footer" id="footer">
+    <div class="f-balloons">${BALLOON('#ff6fb5', 40, 'style="transform:rotate(-12deg)"')}${BALLOON('#ffd23f', 50)}${BALLOON('#3d7bf0', 42, 'style="transform:rotate(12deg)"')}</div>
     <div class="shloka">
       <p class="deva">${esc(C_.longLife.shloka)}</p>
       <p class="tr">${esc(C_.longLife.translation)} <small>(${esc(C_.longLife.source)})</small></p>
     </div>
     <p class="gift">${esc(C_.footer.gift)} 🎁</p>
-    <p>${esc(C_.footer.signoff)}</p>
+    <p class="signoff">${esc(C_.footer.signoff)}</p>
     <a class="btn wa" id="share" href="${esc(shareUrl())}" target="_blank" rel="noopener">Share on WhatsApp</a>
     ${C_.ganeshImg.endsWith('ganesh-icon.svg') ? `<p class="credit">${esc(C_.ganeshCredit)}</p>` : ''}
   </footer>`;
 
 const lightbox = () => `
   <div class="lightbox" id="lightbox" hidden role="dialog" aria-label="Photo">
-    <img alt="">
+    <figure><img alt=""><figcaption></figcaption></figure>
     <button type="button" class="lb-x" aria-label="Close">×</button>
+    <button type="button" class="lb-nav prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="lb-nav next" aria-label="Next photo">›</button>
   </div>`;
 
+// Quick actions pinned to the bottom once the hero scrolls away.
+const dock = () => `
+  <nav class="dock" aria-label="Quick actions">
+    <a href="#rsvp"><span aria-hidden="true">💌</span>RSVP</a>
+    <a href="${esc(C_.venue.mapUrl)}" target="_blank" rel="noopener"><span aria-hidden="true">📍</span>Directions</a>
+    <a href="${esc(calendarUrl())}" target="_blank" rel="noopener"><span aria-hidden="true">📅</span>Calendar</a>
+    <a href="#wishes"><span aria-hidden="true">✨</span>Wish</a>
+  </nav>`;
+
 function renderPage(variant) {
-  return [HERO[variant](), MONTHS_SEC[variant](), countdownSec(), hostsSec(), scheduleSec(), venueSec(),
-    gallerySec(), rsvpSec(), wishesSec(), footerSec()].join('') + lightbox();
+  return [HERO[variant](), ribbon(C_.ribbon), MONTHS_SEC[variant](), countdownSec(), hostsSec(), scheduleSec(), venueSec(),
+    ribbon(C_.ribbon2, 'rev'), gallerySec(), rsvpSec(), wishesSec(), footerSec()].join('') + lightbox() + dock();
 }
 
 /* Variant A balloon arch, sized to its box (from the prototype). */
@@ -276,7 +396,7 @@ function buildArch() {
       const x = cx + rx * Math.cos(th) + (rnd() - 0.5) * W * 0.06;
       const y = cy - ry * Math.sin(th) + (rnd() - 0.5) * W * 0.06;
       const c = rnd() < 0.25 ? '#ffffff' : band;
-      html += `<div class="b" style="--c:${c};width:${s}px;height:${s * 1.05}px;left:${x}px;top:${y}px"></div>`;
+      html += `<div class="b" style="--k:${(rnd() * 3).toFixed(2)};--c:${c};width:${s}px;height:${s * 1.05}px;left:${x}px;top:${y}px"></div>`;
     }
   }
   box.insertAdjacentHTML('beforeend', html);

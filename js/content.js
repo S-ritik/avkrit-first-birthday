@@ -6,7 +6,7 @@ const CONTENT = {
 
   // Paste the Apps Script web app URL (ends in /exec) after deploying backend/Code.gs.
   // Empty = RSVP and Wishes show "opening soon".
-  backendUrl: '',
+  backendUrl: 'https://script.google.com/macros/s/AKfycbyoJDAQeqYuSiOZk7BgDEmfgQA974RHop825EuOqFbBQz2eFrjXTsL9y32epH6lkdyl/exec',
 
   // Background music. Missing file = silent page, no errors.
   music: { src: 'assets/audio/theme.mp3', loop: true },
@@ -14,6 +14,8 @@ const CONTENT = {
   // 4 Dec 2026, 6:30 pm IST. Drives countdown and RSVP close. Keep in sync with backend PARTY_START_MS.
   partyStart: '2026-12-04T13:00:00Z',
   partyEnd: '2026-12-04T16:30:00Z', // calendar event end, 10:00 pm IST
+
+  born: '2025-12-04', // drives "N days old" and photo-age captions
 
   name: 'Avkrit',
   headline: 'Our Little Prince Avkrit turns 1',
@@ -29,19 +31,49 @@ const CONTENT = {
   hero: { id: 'img-20260807-wa0018', pos: '50% 40%' },          // #23
   littleGanesh: { id: 'img-20260915-wa0004', pos: '50% 22%' },  // #30, Avkrit dressed as Ganesh
 
-  // Month n = the 4th of each month (born 4 Dec 2025). id null -> photos/months/mNN.jpg.
+  // Catchy lines. Edit freely; an empty string hides that line.
+  slogans: {
+    hero: 'One year of smiles, giggles & tiny miracles',
+    months: 'Our 12-month journey',
+    countdown: "Tick-tock, it's almost cake o'clock!",
+    schedule: 'An evening of cake, candles & cuddles',
+    gallery: 'Little moments, big memories',
+    rsvp: "The celebration isn't complete without you",
+    wishes: 'Shower the birthday boy with blessings',
+    yearTile: 'ONE-derful!',
+  },
+  // Scrolling ribbons between sections.
+  ribbon: [
+    'From first cry to first candle', '365 days of giggles', 'Blessed by Bappa', 'Twelve months of magic',
+    'Little feet, big adventures', 'One candle, a million wishes', '52 weeks of wonder', 'Our little prince turns one',
+  ],
+  ribbon2: [
+    'Smiles · Giggles · Cuddles', 'A ONE-derful year', 'Cake, candles & blessings', 'Year one, full of fun',
+    'Tiny hands, giant hearts', 'Party like a prince', 'Hello, year two!',
+  ],
+
+  // Month n = the 4th of each month (born 4 Dec 2025). id null -> photos/months/mNN.jpg. tag = playful caption.
   months: [
-    { n: 1, date: '4 Jan', id: null },
-    { n: 2, date: '4 Feb', id: null },
-    { n: 3, date: '4 Mar', id: null },
-    { n: 4, date: '4 Apr', id: 'img-20260408-wa0008', pos: '50% 50%' },
-    { n: 5, date: '4 May', id: 'img-20260504-wa0003-1', pos: '50% 30%' },
-    { n: 6, date: '4 Jun', id: 'img-20260605-wa0026', pos: '50% 40%' },
-    { n: 7, date: '4 Jul', id: 'img-20260705-wa0003', pos: '50% 20%' },
-    { n: 8, date: '4 Aug', id: 'img-20260804-wa0019', pos: '50% 50%' },
-    { n: 9, date: '4 Sep', id: 'img-20260904-wa0023', pos: '50% 30%' },
-    { n: 10, date: '4 Oct', id: 'img-20261004-wa0012', pos: '62% 60%' },
-    { n: 11, date: '4 Nov', id: 'whatsapp-image-2026-11-04-at-11-33-41-pm', pos: '50% 70%' },
+    { n: 1, date: '4 Jan', id: null, tag: 'Hello, world!' },
+    { n: 2, date: '4 Feb', id: null, tag: 'Tiny toes' },
+    { n: 3, date: '4 Mar', id: null, tag: "Giggle o'clock" },
+    { n: 4, date: '4 Apr', id: 'img-20260408-wa0008', pos: '50% 50%', tag: 'Little explorer' },
+    { n: 5, date: '4 May', id: 'img-20260504-wa0003-1', pos: '50% 30%', tag: 'Mischief loading' },
+    { n: 6, date: '4 Jun', id: 'img-20260605-wa0026', pos: '50% 40%', tag: 'Halfway to one!' },
+    { n: 7, date: '4 Jul', id: 'img-20260705-wa0003', pos: '50% 20%', tag: 'Sunshine smiles' },
+    { n: 8, date: '4 Aug', id: 'img-20260804-wa0019', pos: '50% 50%', tag: 'Big eyes, big dreams' },
+    { n: 9, date: '4 Sep', id: 'img-20260904-wa0023', pos: '50% 30%', tag: 'Busy bee' },
+    { n: 10, date: '4 Oct', id: 'img-20261004-wa0012', pos: '62% 60%', tag: 'Double digits!' },
+    { n: 11, date: '4 Nov', id: 'whatsapp-image-2026-11-04-at-11-33-41-pm', pos: '50% 70%', tag: 'Almost there!' },
+  ],
+
+  // "First year in numbers" tiles under the months. Swap in real milestones if you like
+  // (e.g. { value: '9 mo', label: 'first steps' }, { value: 'Mumma', label: 'first word' }).
+  firstYear: [
+    { value: '365', label: 'days of giggles', icon: '☀️' },
+    { value: '12', label: 'little birthdays', icon: '🎂' },
+    { value: '52', label: 'weeks of wonder', icon: '🌙' },
+    { value: '∞', label: 'cuddles & kisses', icon: '💛' },
   ],
 
   hosts: {
@@ -64,7 +96,7 @@ const CONTENT = {
 
   longLife: {
     shloka: 'पश्येम शरदः शतं जीवेम शरदः शतम्',
-    source: 'Yajurveda 36.24',
+    source: '',
     translation: 'May we see a hundred autumns; may we live a hundred autumns.',
   },
   footer: {

@@ -6,16 +6,15 @@ const BEFORE = new Date('2026-11-25T09:30:00Z'); // 9 d 3 h 30 m before party st
 const PARTY = new Date('2026-12-04T13:00:00Z');
 const CORS = { 'access-control-allow-origin': '*' };
 
-/** Open the Invite. Options: time, backend (bool), wishes, postResult, postDelay, query, motion. */
-async function open(page, { time = BEFORE, backend = true, wishes = [], postResult = { ok: true }, postDelay = 0, query = '', motion = 'reduce' } = {}) {
+/** Open the Invite. Options: time, backend (bool), wishes, postResult, postDelay, query, motion, frozen (clock moves only via runFor). */
+async function open(page, { time = BEFORE, backend = true, wishes = [], postResult = { ok: true }, postDelay = 0, query = '', motion = 'reduce', frozen = false } = {}) {
   await page.emulateMedia({ reducedMotion: motion });
   await page.clock.install({ time });
-  if (backend) {
-    await page.route('**/js/content.js', async (route) => {
-      const res = await route.fetch();
-      route.fulfill({ response: res, body: (await res.text()).replace("backendUrl: ''", `backendUrl: '${FAKE}'`) });
-    });
-  }
+  if (frozen) await page.clock.pauseAt(time);
+  await page.route('**/js/content.js', async (route) => {
+    const res = await route.fetch();
+    route.fulfill({ response: res, body: (await res.text()).replace(/backendUrl: '[^']*'/, `backendUrl: '${backend ? FAKE : ''}'`) });
+  });
   const posts = [];
   await page.route('https://script.google.com/**', async (route) => {
     const req = route.request();
@@ -68,16 +67,43 @@ for (const v of ['A', 'C']) {
   });
 }
 
-test('intro plays, then reveals the page after ~2.6 s', async ({ page }) => {
-  await open(page, { motion: 'no-preference' });
+for (const v of ['A', 'C']) {
+  test(`variant ${v} on a 1366px laptop: wide page, 2-column hero, months fit without side-scroll`, async ({ page }) => {
+    await page.setViewportSize({ width: 1366, height: 768 });
+    await open(page, { query: `?variant=${v}` });
+    const r = await page.evaluate(() => ({
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      pageW: document.querySelector('.page').clientWidth,
+      heroCols: getComputedStyle(document.querySelector('#hero')).gridTemplateColumns.split(' ').length,
+      line: (() => { const l = document.querySelector('.C-months .line'); return l ? l.scrollWidth - l.clientWidth : 0; })(),
+    }));
+    expect(r.overflow).toBeLessThanOrEqual(0);
+    expect(r.pageW).toBeGreaterThan(1000);
+    expect(r.heroCols).toBe(2);
+    expect(r.line).toBeLessThanOrEqual(0);
+  });
+}
+
+test('slogans: ribbons, hero tagline and month tags come from content', async ({ page }) => {
+  await open(page);
+  await expect(page.locator('.ribbon')).toHaveCount(2);
+  await expect(page.locator('.ribbon').first()).toContainText('365 days of giggles');
+  await expect(page.locator('#hero .tagline')).toHaveText('One year of smiles, giggles & tiny miracles');
+  await expect(page.locator('#months .eyebrow')).toHaveText('Our 12-month journey');
+  await expect(page.locator('#months .tag')).toHaveCount(12);
+});
+
+test('intro: envelope opens, then reveals the page after ~3.3 s', async ({ page }) => {
+  await open(page, { motion: 'no-preference', frozen: true });
   await expect(page.locator('#intro')).toBeVisible();
-  await expect(page.locator('#intro .hello')).toContainText('Avkrit turns 1');
-  await page.clock.runFor(3000);
+  await expect(page.locator('#intro .env-card')).toContainText('Avkrit turns 1');
+  await expect(page.locator('#intro .env-seal')).toBeAttached();
+  await page.clock.runFor(4000);
   await expect(page.locator('#intro')).toHaveCount(0);
 });
 
 test('tap skips the intro', async ({ page }) => {
-  await open(page, { motion: 'no-preference' });
+  await open(page, { motion: 'no-preference', frozen: true });
   await page.locator('#intro').dispatchEvent('pointerdown');
   await page.clock.runFor(400);
   await expect(page.locator('#intro')).toHaveCount(0);
