@@ -5,13 +5,13 @@ const CONTENT = {
   siteUrl: 'https://s-ritik.github.io/avkrit-first-birthday/',
 
   // Paste the Apps Script web app URL (ends in /exec) after deploying backend/Code.gs.
-  // Empty = RSVP and Wishes show "opening soon".
+  // Empty = Wishes show "opening soon".
   backendUrl: 'https://script.google.com/macros/s/AKfycbyoJDAQeqYuSiOZk7BgDEmfgQA974RHop825EuOqFbBQz2eFrjXTsL9y32epH6lkdyl/exec',
 
   // Background music. Missing file = silent page, no errors.
   music: { src: 'assets/audio/theme.mp3', loop: true },
 
-  // 4 Dec 2026, 6:30 pm IST. Drives countdown and RSVP close. Keep in sync with backend PARTY_START_MS.
+  // 4 Dec 2026, 6:30 pm IST. Drives the countdown and calendar event.
   partyStart: '2026-12-04T13:00:00Z',
   partyEnd: '2026-12-04T16:30:00Z', // calendar event end, 10:00 pm IST
 
@@ -33,46 +33,45 @@ const CONTENT = {
 
   // Catchy lines. Edit freely; an empty string hides that line.
   slogans: {
-    hero: 'One year of smiles, giggles & tiny miracles',
-    months: 'Our 12-month journey',
+    hero: 'One year old, four generations proud',
+    months: 'A new photo every 4th',
     countdown: "Tick-tock, it's almost cake o'clock!",
-    schedule: 'An evening of cake, candles & cuddles',
-    gallery: 'Little moments, big memories',
-    rsvp: "The celebration isn't complete without you",
-    wishes: 'Shower the birthday boy with blessings',
-    yearTile: 'ONE-derful!',
+    schedule: 'Come hungry. Cake at 7, dinner at 8.',
+    gallery: 'He steals every frame. See for yourself.',
+    wishes: "He can't read yet, so we'll read them to him",
+    yearTile: 'The big ONE!',
   },
   // Scrolling ribbons between sections.
   ribbon: [
-    'From first cry to first candle', '365 days of giggles', 'Blessed by Bappa', 'Twelve months of magic',
-    'Little feet, big adventures', 'One candle, a million wishes', '52 weeks of wonder', 'Our little prince turns one',
+    'From first cry to first candle', '365 days, zero dull moments', 'Blessed by Bappa', 'Our little Bal Ganesh',
+    'Four generations, one cake', 'One candle, one very big deal', 'The house alarm clock turns one', 'Little Prince, big party',
   ],
   ribbon2: [
-    'Smiles · Giggles · Cuddles', 'A ONE-derful year', 'Cake, candles & blessings', 'Year one, full of fun',
-    'Tiny hands, giant hearts', 'Party like a prince', 'Hello, year two!',
+    'Cake first, nap later', 'Officially one', 'Save room for cake', 'One down, a hundred autumns to go',
+    'Tiny boss, big birthday', 'Party like a prince', 'Hello, year two!',
   ],
 
   // Month n = the 4th of each month (born 4 Dec 2025). id null -> photos/months/mNN.jpg. tag = playful caption.
   months: [
-    { n: 1, date: '4 Jan', id: null, tag: 'Hello, world!' },
-    { n: 2, date: '4 Feb', id: null, tag: 'Tiny toes' },
-    { n: 3, date: '4 Mar', id: null, tag: "Giggle o'clock" },
-    { n: 4, date: '4 Apr', id: 'img-20260408-wa0008', pos: '50% 50%', tag: 'Little explorer' },
+    { n: 1, date: '4 Jan', id: null, tag: 'Hello, 2026!' },
+    { n: 2, date: '4 Feb', id: null, tag: 'Who needs sleep?' },
+    { n: 3, date: '4 Mar', id: null, tag: 'First Holi' },
+    { n: 4, date: '4 Apr', id: 'img-20260408-wa0008', pos: '50% 50%', tag: 'On a roll' },
     { n: 5, date: '4 May', id: 'img-20260504-wa0003-1', pos: '50% 30%', tag: 'Mischief loading' },
     { n: 6, date: '4 Jun', id: 'img-20260605-wa0026', pos: '50% 40%', tag: 'Halfway to one!' },
-    { n: 7, date: '4 Jul', id: 'img-20260705-wa0003', pos: '50% 20%', tag: 'Sunshine smiles' },
-    { n: 8, date: '4 Aug', id: 'img-20260804-wa0019', pos: '50% 50%', tag: 'Big eyes, big dreams' },
-    { n: 9, date: '4 Sep', id: 'img-20260904-wa0023', pos: '50% 30%', tag: 'Busy bee' },
+    { n: 7, date: '4 Jul', id: 'img-20260705-wa0003', pos: '50% 20%', tag: 'First monsoon' },
+    { n: 8, date: '4 Aug', id: 'img-20260804-wa0019', pos: '50% 50%', tag: 'Zero chill mode' },
+    { n: 9, date: '4 Sep', id: 'img-20260904-wa0023', pos: '50% 30%', tag: "Bappa's on his way" },
     { n: 10, date: '4 Oct', id: 'img-20261004-wa0012', pos: '62% 60%', tag: 'Double digits!' },
-    { n: 11, date: '4 Nov', id: 'whatsapp-image-2026-11-04-at-11-33-41-pm', pos: '50% 70%', tag: 'Almost there!' },
+    { n: 11, date: '4 Nov', id: 'whatsapp-image-2026-11-04-at-11-33-41-pm', pos: '50% 70%', tag: '30 days to cake!' },
   ],
 
   // "First year in numbers" tiles under the months. Swap in real milestones if you like
   // (e.g. { value: '9 mo', label: 'first steps' }, { value: 'Mumma', label: 'first word' }).
   firstYear: [
     { value: '365', label: 'days of giggles', icon: '☀️' },
-    { value: '12', label: 'little birthdays', icon: '🎂' },
-    { value: '52', label: 'weeks of wonder', icon: '🌙' },
+    { value: '12', label: 'monthly photo shoots', icon: '📸' },
+    { value: '4', label: 'generations celebrating', icon: '🏡' },
     { value: '∞', label: 'cuddles & kisses', icon: '💛' },
   ],
 
@@ -107,5 +106,5 @@ const CONTENT = {
   // Swap to 'assets/img/ganesh.png' if you add a Pixabay Ganesh; the credit then disappears.
   ganeshImg: 'assets/img/ganesh-icon.svg',
   // Shown only while the CC BY-SA icon above is used.
-  ganeshCredit: 'Ganesha icon by Ameya Narvankar, The Noun Project, CC BY-SA 3.0',
+  ganeshCredit: '',
 };

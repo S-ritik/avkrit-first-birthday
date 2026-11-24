@@ -1,4 +1,4 @@
-// Boots the Invite: variant, intro, music, countdown, RSVP, Wishes Wall, gallery lightbox.
+// Boots the Invite: variant, intro, music, countdown, Wishes Wall, gallery lightbox.
 
 const params = new URLSearchParams(location.search);
 const VARIANT = params.get('variant') === 'C' ? 'C' : 'A';
@@ -16,7 +16,6 @@ function boot() {
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) playIntro();
   startMusic();
   startCountdown();
-  initRsvp();
   initWishes();
   initLightbox();
   initDock();
@@ -111,7 +110,6 @@ function startCountdown() {
       $('[data-age]').textContent = '';
       $('[data-cd]').hidden = true;
       $('.cd-done').hidden = false;
-      closeRsvp();
       clearInterval(iv);
       return;
     }
@@ -136,59 +134,6 @@ function busy(form, on) {
   const b = $('button[type=submit]', form);
   b.disabled = on;
   form.classList.toggle('sending', on);
-}
-
-function closeRsvp() {
-  const sec = $('#rsvp');
-  $('#rsvp-form', sec).hidden = true;
-  $('.soon', sec).hidden = true;
-  $('.closed', sec).hidden = false;
-}
-
-function initRsvp() {
-  const sec = $('#rsvp');
-  const form = $('#rsvp-form', sec);
-  if (partyStarted()) return closeRsvp();
-  if (!backendReady()) { form.hidden = true; $('.soon', sec).hidden = false; return; }
-
-  const guestsBox = $('.guests', form);
-  const guests = form.elements.guests;
-  const clamp = () => { guests.value = Math.min(10, Math.max(1, parseInt(guests.value, 10) || 1)); };
-  form.addEventListener('change', (e) => {
-    if (e.target.name === 'attending') guestsBox.hidden = form.elements.attending.value !== 'yes';
-    if (e.target === guests) clamp();
-  });
-  form.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => {
-    guests.value = (parseInt(guests.value, 10) || 1) + Number(b.dataset.step);
-    clamp();
-  }));
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = form.elements.name.value.trim();
-    if (!name) { say(form, ERRORS.name, 'err'); form.elements.name.focus(); return; }
-    clamp();
-    const attending = form.elements.attending.value;
-    busy(form, true);
-    say(form, 'Sending…');
-    const res = await apiPost({
-      type: 'rsvp', name, attending,
-      guests: attending === 'yes' ? Number(guests.value) : 0,
-      website: form.elements.website.value,
-    });
-    busy(form, false);
-    if (res.ok) {
-      form.reset();
-      guestsBox.hidden = false;
-      say(form, attending === 'yes' ? `Thank you, ${name}! See you on 4 December 🎉` : `Thank you, ${name}. We'll miss you! 💛`, 'ok');
-      const wishName = $('#wish-form').elements.name;
-      if (!wishName.value) wishName.value = name;
-    } else if (res.err === 'closed') {
-      closeRsvp();
-    } else {
-      say(form, errorText(res.err), 'err');
-    }
-  });
 }
 
 /* ---------- Wishes Wall ---------- */
@@ -263,29 +208,36 @@ function initWishes() {
   });
 }
 
-/* ---------- gallery lightbox: open on tap; ‹ › / arrows / swipe to browse; close on tap, Esc or back ---------- */
+/* ---------- lightbox: tap any [data-zoom] photo; ‹ › / arrows / swipe browse its group; close on tap, Esc or back ---------- */
 function initLightbox() {
   const lb = $('#lightbox');
   const img = $('img', lb);
   const cap = $('figcaption', lb);
-  const cards = [...document.querySelectorAll('.pola')];
-  let at = 0;
+  let group = [], at = 0;
+  // Only boxes whose photo actually loaded (a failed one becomes a placeholder).
+  const zoomable = (root) => [...root.querySelectorAll('[data-zoom]')].filter((el) => el.querySelector('img.photo'));
   const hide = () => { lb.hidden = true; img.removeAttribute('src'); };
   const close = () => { if (!lb.hidden) history.state && history.state.lb ? history.back() : hide(); };
   const show = (i) => {
-    at = (i + cards.length) % cards.length;
-    const id = cards[at].dataset.id, c = photoCaption(id);
-    img.src = photoSrc(id, 'lg');
-    img.alt = c ? `${CONTENT.name}, ${c.date}` : CONTENT.name;
-    cap.textContent = `${c ? `${c.date} · ${c.age}` : CONTENT.name}   ${at + 1} / ${cards.length}`;
+    at = (i + group.length) % group.length;
+    const el = group[at], label = el.dataset.cap || CONTENT.name;
+    img.src = photoSrc(el.dataset.zoom, 'lg');
+    img.alt = `${CONTENT.name}, ${label}`;
+    cap.textContent = group.length > 1 ? `${label}   ${at + 1} / ${group.length}` : label;
+    lb.classList.toggle('single', group.length < 2);
   };
-
-  $('.polas').addEventListener('click', (e) => {
-    const card = e.target.closest('.pola');
-    if (!card) return;
-    show(cards.indexOf(card));
+  const open = (el) => {
+    if (!el || !el.querySelector('img.photo')) return;
+    group = zoomable(el.closest('[data-zoom-group]') || document);
+    show(group.indexOf(el));
     lb.hidden = false;
     history.pushState({ lb: 1 }, '');
+  };
+
+  $('#app').addEventListener('click', (e) => open(e.target.closest('[data-zoom]')));
+  $('#app').addEventListener('keydown', (e) => {
+    const el = e.target.closest('[data-zoom][role=button]');
+    if (el && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(el); }
   });
   lb.addEventListener('click', (e) => {
     const nav = e.target.closest('.lb-nav');

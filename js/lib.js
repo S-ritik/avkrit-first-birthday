@@ -6,7 +6,6 @@ const PARTY_END_MS = Date.parse(CONTENT.partyEnd);
 
 // The one clock. Everything time-dependent reads it here.
 const now = () => Date.now();
-const partyStarted = () => now() >= PARTY_START_MS;
 
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -121,7 +120,6 @@ const ERRORS = {
   message: 'Please write a wish.',
   rate: 'Please wait a few seconds and try again.',
   busy: 'Lots of messages right now! Try again in a moment.',
-  closed: 'RSVPs are closed.',
   network: "Couldn't send. Check your connection and try again.",
 };
 const errorText = (err) => ERRORS[err] || ERRORS.network;

@@ -79,6 +79,10 @@ const ganeshImg = () => photo(C_.littleGanesh.id, { pos: C_.littleGanesh.pos, al
 const monthId = (m) => m.id || `months/m${String(m.n).padStart(2, '0')}`;
 const monthImg = (m) => photo(monthId(m), { pos: m.pos, alt: `${C_.name} at ${m.n} months`, ph: 'Coming soon' });
 const monthLabel = (m) => `${m.n} month${m.n > 1 ? 's' : ''}`;
+// Marks a photo box as tap-to-enlarge (opens the lightbox). Nothing for missing photos.
+const zoom = (id, cap, btn = false) => (id && PHOTO_IDS.has(id)
+  ? ` data-zoom="${esc(id)}" data-cap="${esc(cap)}"${btn ? '' : ` role="button" tabindex="0" aria-label="Enlarge photo: ${esc(cap)}"`}` : '');
+const monthZoom = (m) => zoom(monthId(m), `${monthLabel(m)} · ${m.date}`);
 const tag = (t) => (t ? `<em class="tag">${esc(t)}</em>` : '');
 const slogan = (k) => (C_.slogans && C_.slogans[k]) || '';
 const subLine = (k) => (slogan(k) ? `<p class="sub slogan">${esc(slogan(k))}</p>` : '');
@@ -102,11 +106,11 @@ const shlokaBlock = () => `
 /* ---------- Blessing + Hero, per variant ---------- */
 const HERO = {
   A: () => `
-    <section class="A-hero" id="hero">
+    <section class="A-hero" id="hero" data-zoom-group>
       ${TORAN()}
       <div class="top">
         ${blessingTop()}
-        <div class="lg">${ganeshImg()}</div>
+        <div class="lg"${zoom(C_.littleGanesh.id, 'Our little Ganesha')}>${ganeshImg()}</div>
         <div class="lg-cap">Our little Ganesha 🙏</div>
         ${shlokaBlock()}
         <div class="kicker">Our Little Prince</div>
@@ -115,7 +119,7 @@ const HERO = {
       <div class="cloud" style="width:90px;height:26px;right:6%;top:46%"></div>
       <div class="arch" id="arch">
         <div class="backdrop"></div><div class="rainbow"></div>
-        <div class="photo-wrap">${CROWN}${heroImg()}</div>
+        <div class="photo-wrap"${zoom(C_.hero.id, C_.name)}>${CROWN}${heroImg()}</div>
       </div>
       <div class="stage">
         <h1 class="sr">${esc(C_.headline)}</h1>
@@ -133,11 +137,11 @@ const HERO = {
     </section>`,
 
   C: () => `
-    <section class="C-hero" id="hero">
+    <section class="C-hero" id="hero" data-zoom-group>
       ${TORAN()}
       <div class="h-left">
       ${blessingTop()}
-      <div class="lg">${ganeshImg()}<div class="cap">our little Ganesha</div></div>
+      <div class="lg"${zoom(C_.littleGanesh.id, 'Our little Ganesha')}>${ganeshImg()}<div class="cap">our little Ganesha</div></div>
       ${shlokaBlock()}
       </div>
       <div class="h-right">
@@ -148,7 +152,7 @@ const HERO = {
         ${BALLOON('#2fbf55', 54, 'style="left:62%;top:30px;transform:rotate(18deg)"')}
         ${BALLOON('#f0453a', 50, 'style="left:44%;top:46px;transform:rotate(2deg)"')}
       </div>
-      <div class="polaroid"><div class="tape"></div>${CROWN}<div class="ph">${heroImg()}</div><div class="cap">${esc(C_.name)}</div></div>
+      <div class="polaroid"><div class="tape"></div>${CROWN}<div class="ph"${zoom(C_.hero.id, C_.name)}>${heroImg()}</div><div class="cap">${esc(C_.name)}</div></div>
       <h1><span class="sr">${esc(C_.headline)}</span><span aria-hidden="true">Our Little Prince<br>${esc(C_.name)} turns <em>one</em></span></h1>
       ${slogan('hero') ? `<p class="tagline">${esc(slogan('hero'))}</p>` : ''}
       <div class="meta"><b>${esc(C_.dateText)}</b><br>${esc(C_.timeText)} · 📍 ${esc(C_.venue.name)}</div>
@@ -169,9 +173,9 @@ const MONTHS_SEC = {
       ${slogan('months') ? eyebrow(slogan('months')) : ''}
       <h2>12 Little Birthdays</h2>
       <div class="sub">Every 4th, we celebrated one more month of ${esc(C_.name)}</div>
-      <div class="grid">
+      <div class="grid" data-zoom-group>
         ${C_.months.map((m, i) => `<div class="m" style="--c:${RAINBOW[i % 6]}">
-          <div class="ball">${monthImg(m)}</div><div class="knot"></div><div class="str"></div>
+          <div class="ball"${monthZoom(m)}>${monthImg(m)}</div><div class="knot"></div><div class="str"></div>
           <div class="lbl">${monthLabel(m)}<small>${esc(m.date)}</small>${tag(m.tag)}</div></div>`).join('')}
         <div class="m big" style="--c:#f5c542">
           <div class="ball"><b>1</b></div><div class="knot"></div><div class="str"></div>
@@ -186,9 +190,9 @@ const MONTHS_SEC = {
       <h2>12 Little Birthdays</h2>
       <div class="sub">Every 4th, we celebrated one more month of ${esc(C_.name)}</div>
       <div class="hint">swipe →</div>
-      <div class="line"><div class="row">
+      <div class="line"><div class="row" data-zoom-group>
         ${C_.months.map((m, i) => `<div class="slot"><div class="pc" style="--r:${[-3, 2, -2, 3][i % 4]}deg"><div class="peg"></div>
-          <div class="ph">${monthImg(m)}</div><div class="cap">${monthLabel(m)}<small>${esc(m.date)}</small>${tag(m.tag)}</div></div></div>`).join('')}
+          <div class="ph"${monthZoom(m)}>${monthImg(m)}</div><div class="cap">${monthLabel(m)}<small>${esc(m.date)}</small>${tag(m.tag)}</div></div></div>`).join('')}
         <div class="slot"><div class="pc big" style="--r:2deg"><div class="peg"></div><div class="ph"><b>1</b></div>
           <div class="cap">1 year!<small>4 Dec · see you there</small>${tag(slogan('yearTile'))}</div></div></div>
       </div></div>
@@ -284,10 +288,10 @@ const gallerySec = () => {
     <h2>Moments with ${esc(C_.name)}</h2>
     ${subLine('gallery')}
     <p class="sub">Tap a photo to see it bigger</p>
-    <div class="polas">
+    <div class="polas" data-zoom-group>
       ${galleryIds().map((p) => {
         const cap = photoCaption(p.id);
-        return `<button class="pola" type="button" data-id="${esc(p.id)}"
+        return `<button class="pola" type="button" data-id="${esc(p.id)}"${zoom(p.id, cap ? `${cap.date} · ${cap.age}` : C_.name, true)}
         style="--r:${((rnd() - 0.5) * 8).toFixed(1)}deg;--y:${Math.round(rnd() * 10)}px;--tr:${((rnd() - 0.5) * 16).toFixed(1)}deg;--tc:${['#ffe58a', '#ffc2d9', '#bfe6ff', '#c8f0b0'][Math.floor(rnd() * 4)]}">
         <span class="tape" aria-hidden="true"></span>
         <span class="ph" style="aspect-ratio:${p.w}/${p.h}">${photo(p.id, { alt: cap ? `${C_.name}, ${cap.date}` : C_.name })}</span>
@@ -298,33 +302,6 @@ const gallerySec = () => {
 };
 
 const honeypot = `<input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">`;
-
-const rsvpSec = () => `
-  <section class="sec rsvp" id="rsvp">
-    ${eyebrow('Kindly reply')}
-    <h2>Will you join us?</h2>
-    ${subLine('rsvp')}
-    <form id="rsvp-form" novalidate>
-      <label class="field">Your name
-        <input name="name" maxlength="60" autocomplete="name" required></label>
-      <fieldset class="seg"><legend>Will you attend?</legend>
-        <label><input type="radio" name="attending" value="yes" checked><span>Yes, we'll be there 🎉</span></label>
-        <label><input type="radio" name="attending" value="no"><span>Sorry, can't make it</span></label>
-      </fieldset>
-      <div class="field guests">How many of you are coming?
-        <div class="stepper">
-          <button type="button" data-step="-1" aria-label="Fewer">−</button>
-          <input name="guests" type="number" min="1" max="10" value="1" inputmode="numeric" aria-label="Number of guests">
-          <button type="button" data-step="1" aria-label="More">+</button>
-        </div>
-      </div>
-      ${honeypot}
-      <button class="btn" type="submit">Send RSVP</button>
-      <p class="msg" role="status"></p>
-    </form>
-    <p class="closed" hidden>RSVPs are closed. Thank you! 💛</p>
-    <p class="soon" hidden>RSVP opening soon.</p>
-  </section>`;
 
 const wishesSec = () => `
   <section class="sec wishes" id="wishes">
@@ -356,7 +333,7 @@ const footerSec = () => `
     <p class="gift">${esc(C_.footer.gift)} 🎁</p>
     <p class="signoff">${esc(C_.footer.signoff)}</p>
     <a class="btn wa" id="share" href="${esc(shareUrl())}" target="_blank" rel="noopener">Share on WhatsApp</a>
-    ${C_.ganeshImg.endsWith('ganesh-icon.svg') ? `<p class="credit">${esc(C_.ganeshCredit)}</p>` : ''}
+    ${C_.ganeshImg.endsWith('ganesh-icon.svg') && C_.ganeshCredit ? `<p class="credit">${esc(C_.ganeshCredit)}</p>` : ''}
   </footer>`;
 
 const lightbox = () => `
@@ -370,15 +347,14 @@ const lightbox = () => `
 // Quick actions pinned to the bottom once the hero scrolls away.
 const dock = () => `
   <nav class="dock" aria-label="Quick actions">
-    <a href="#rsvp"><span aria-hidden="true">💌</span>RSVP</a>
+    <a href="#wishes"><span aria-hidden="true">💌</span>Wish</a>
     <a href="${esc(C_.venue.mapUrl)}" target="_blank" rel="noopener"><span aria-hidden="true">📍</span>Directions</a>
     <a href="${esc(calendarUrl())}" target="_blank" rel="noopener"><span aria-hidden="true">📅</span>Calendar</a>
-    <a href="#wishes"><span aria-hidden="true">✨</span>Wish</a>
   </nav>`;
 
 function renderPage(variant) {
   return [HERO[variant](), ribbon(C_.ribbon), MONTHS_SEC[variant](), countdownSec(), hostsSec(), scheduleSec(), venueSec(),
-    ribbon(C_.ribbon2, 'rev'), gallerySec(), rsvpSec(), wishesSec(), footerSec()].join('') + lightbox() + dock();
+    ribbon(C_.ribbon2, 'rev'), gallerySec(), wishesSec(), footerSec()].join('') + lightbox() + dock();
 }
 
 /* Variant A balloon arch, sized to its box (from the prototype). */

@@ -33,7 +33,7 @@ test('renders every section in order, noindex, variant A by default', async ({ p
   await open(page);
   await expect(page.locator('body')).toHaveClass(/\bA\b/);
   const ids = await page.locator('#app > section, #app > footer').evaluateAll((els) => els.map((e) => e.id));
-  expect(ids).toEqual(['hero', 'months', 'countdown', 'hosts', 'schedule', 'venue', 'gallery', 'rsvp', 'wishes', 'footer']);
+  expect(ids).toEqual(['hero', 'months', 'countdown', 'hosts', 'schedule', 'venue', 'gallery', 'wishes', 'footer']);
   await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', /noindex/);
   await expect(page.locator('h1')).toContainText('Our Little Prince Avkrit turns 1');
   await expect(page.locator('#hero')).toContainText('श्री गणेशाय नमः');
@@ -44,7 +44,6 @@ test('renders every section in order, noindex, variant A by default', async ({ p
   await expect(page.locator('.timeline li')).toHaveText([/6:30 PM.*Welcome/, /7:00 PM.*Cake Cutting/, /8:00 PM.*Dinner/]);
   await expect(page.locator('#footer')).toContainText('Your blessings are the gift');
   await expect(page.locator('#footer .deva')).toContainText('पश्येम शरदः शतं');
-  await expect(page.locator('#footer .credit')).toContainText('Ameya Narvankar');
   await expect(page.locator('#switcher')).toHaveCount(0);
 });
 
@@ -87,9 +86,9 @@ for (const v of ['A', 'C']) {
 test('slogans: ribbons, hero tagline and month tags come from content', async ({ page }) => {
   await open(page);
   await expect(page.locator('.ribbon')).toHaveCount(2);
-  await expect(page.locator('.ribbon').first()).toContainText('365 days of giggles');
-  await expect(page.locator('#hero .tagline')).toHaveText('One year of smiles, giggles & tiny miracles');
-  await expect(page.locator('#months .eyebrow')).toHaveText('Our 12-month journey');
+  await expect(page.locator('.ribbon').first()).toContainText('Four generations, one cake');
+  await expect(page.locator('#hero .tagline')).toHaveText('One year old, four generations proud');
+  await expect(page.locator('#months .eyebrow')).toHaveText('A new photo every 4th');
   await expect(page.locator('#months .tag')).toHaveCount(12);
 });
 
@@ -150,78 +149,33 @@ test('countdown counts to 4 Dec 6:30 pm IST', async ({ page }) => {
   await expect(page.locator('.cd-done')).toBeHidden();
 });
 
-test('at party start: "Avkrit is 1!" and RSVP closes live', async ({ page }) => {
+test('at party start: "Avkrit is 1!" live; Wishes stay open', async ({ page }) => {
   await open(page, { time: new Date(PARTY.getTime() - 2000) });
-  await expect(page.locator('#rsvp-form')).toBeVisible();
+  await expect(page.locator('[data-cd]')).toBeVisible();
   await page.clock.runFor(3000);
   await expect(page.locator('.cd-done')).toHaveText('Avkrit is 1! 🎉');
   await expect(page.locator('[data-cd]')).toBeHidden();
-  await expect(page.locator('#rsvp-form')).toBeHidden();
-  await expect(page.locator('#rsvp .closed')).toBeVisible();
   await expect(page.locator('#wish-form')).toBeVisible();
 });
 
-test('after the party, RSVP is closed on load and Wishes stay open', async ({ page }) => {
+test('after the party, "Avkrit is 1!" on load and Wishes stay open', async ({ page }) => {
   await open(page, { time: new Date('2026-12-06T09:00:00Z') });
   await expect(page.locator('.cd-done')).toBeVisible();
-  await expect(page.locator('#rsvp .closed')).toBeVisible();
   await expect(page.locator('#wish-form')).toBeVisible();
 });
 
-test('RSVP: guest count only when attending; posts text/plain JSON; thanks the Guest', async ({ page }) => {
-  const posts = await open(page);
-  const form = page.locator('#rsvp-form');
-  await form.getByLabel('Your name').fill('Asha Mehra');
-  await form.getByText("Sorry, can't make it").click();
-  await expect(form.locator('.guests')).toBeHidden();
-  await form.getByText("Yes, we'll be there").click();
-  await expect(form.locator('.guests')).toBeVisible();
-  await form.getByLabel('More').click();
-  await form.getByLabel('More').click();
-  await page.clock.runFor(4000);
-  await form.getByRole('button', { name: 'Send RSVP' }).click();
-  await expect(form.locator('.msg')).toContainText('Thank you, Asha Mehra');
-  expect(posts).toHaveLength(1);
-  expect(posts[0].type).toMatch(/^text\/plain/);
-  expect(posts[0].body).toMatchObject({ type: 'rsvp', name: 'Asha Mehra', attending: 'yes', guests: 3, website: '' });
-  expect(posts[0].body.elapsed).toBeGreaterThanOrEqual(4000);
-  await expect(page.locator('#wish-form [name=name]')).toHaveValue('Asha Mehra');
+test('no RSVP section or RSVP button', async ({ page }) => {
+  await open(page);
+  await expect(page.locator('#rsvp, #rsvp-form, a[href="#rsvp"]')).toHaveCount(0);
+  await expect(page.locator('.dock a').first()).toHaveAttribute('href', '#wishes');
 });
 
-test('RSVP: guests clamp to 1-10 and no sends 0', async ({ page }) => {
+test('Wish: refuses empty name without sending', async ({ page }) => {
   const posts = await open(page);
-  const form = page.locator('#rsvp-form');
-  await form.getByLabel('Your name').fill('Ravi');
-  await form.getByLabel('Number of guests').fill('50');
-  await form.getByLabel('Number of guests').blur();
-  await expect(form.getByLabel('Number of guests')).toHaveValue('10');
-  await form.getByText("Sorry, can't make it").click();
-  await form.getByRole('button', { name: 'Send RSVP' }).click();
-  await expect(form.locator('.msg')).toContainText("We'll miss you");
-  expect(posts[0].body).toMatchObject({ attending: 'no', guests: 0 });
-});
-
-test('RSVP: refuses empty name without sending', async ({ page }) => {
-  const posts = await open(page);
-  await page.locator('#rsvp-form').getByRole('button', { name: 'Send RSVP' }).click();
-  await expect(page.locator('#rsvp-form .msg')).toHaveText('Please enter your name.');
+  await page.locator('#wish-form').getByLabel('Your wish').fill('Hi');
+  await page.locator('#wish-form').getByRole('button', { name: /Send wish/ }).click();
+  await expect(page.locator('#wish-form .msg')).toHaveText('Please enter your name.');
   expect(posts).toHaveLength(0);
-});
-
-test('RSVP: server error keeps inputs and shows the error', async ({ page }) => {
-  await open(page, { postResult: { ok: false, err: 'rate' } });
-  const form = page.locator('#rsvp-form');
-  await form.getByLabel('Your name').fill('Asha');
-  await form.getByRole('button', { name: 'Send RSVP' }).click();
-  await expect(form.locator('.msg')).toHaveText('Please wait a few seconds and try again.');
-  await expect(form.getByLabel('Your name')).toHaveValue('Asha');
-});
-
-test('RSVP: server "closed" switches to closed state', async ({ page }) => {
-  await open(page, { postResult: { ok: false, err: 'closed' } });
-  await page.locator('#rsvp-form').getByLabel('Your name').fill('Asha');
-  await page.locator('#rsvp-form').getByRole('button', { name: 'Send RSVP' }).click();
-  await expect(page.locator('#rsvp .closed')).toBeVisible();
 });
 
 test('Wishes Wall loads newest-first from the server', async ({ page }) => {
@@ -249,7 +203,9 @@ test('Wish shows instantly, as plain text, before the server confirms', async ({
   await expect(card).not.toHaveClass(/pending/);
   await expect(form.locator('.msg')).toContainText('Thank you for your wish');
   expect(await page.evaluate(() => window.__pwned)).toBeUndefined();
+  expect(posts[0].type).toMatch(/^text\/plain/);
   expect(posts[0].body).toMatchObject({ type: 'wish', name: 'Chhotu', message: evil, website: '' });
+  expect(posts[0].body.elapsed).toBeGreaterThanOrEqual(0);
 });
 
 test('Wish failure rolls back the card and restores the message', async ({ page }) => {
@@ -271,10 +227,8 @@ test('Wish needs a message', async ({ page }) => {
   expect(posts).toHaveLength(0);
 });
 
-test('without a backend URL, RSVP and Wishes say "opening soon"', async ({ page }) => {
+test('without a backend URL, Wishes say "opening soon"', async ({ page }) => {
   await open(page, { backend: false });
-  await expect(page.locator('#rsvp .soon')).toBeVisible();
-  await expect(page.locator('#rsvp-form')).toBeHidden();
   await expect(page.locator('#wishes .soon')).toBeVisible();
   await expect(page.locator('#wish-form')).toBeHidden();
 });
@@ -304,6 +258,22 @@ test('gallery: tap enlarges; tap, Esc and back close', async ({ page }) => {
   await lb.click();
   await expect(lb).toBeHidden();
   await expect(page).toHaveURL(/localhost:4173\/$/);
+});
+
+test('month photos enlarge and browse only months; placeholders do not open', async ({ page }) => {
+  await open(page);
+  const lb = page.locator('#lightbox');
+  await page.locator('#months .photo-ph').first().click();
+  await expect(lb).toBeHidden();
+  await page.locator('#months [data-zoom]').first().click();
+  await expect(lb).toBeVisible();
+  await expect(lb.locator('img')).toHaveAttribute('src', /assets\/photos\/lg\//);
+  await expect(lb.locator('figcaption')).toContainText('4 months · 4 Apr');
+  await expect(lb.locator('figcaption')).toContainText('1 / 8');
+  await page.keyboard.press('ArrowLeft');
+  await expect(lb.locator('figcaption')).toContainText('11 months');
+  await page.keyboard.press('Escape');
+  await expect(lb).toBeHidden();
 });
 
 test('venue, calendar and WhatsApp share links', async ({ page }) => {

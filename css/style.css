@@ -190,22 +190,12 @@ input,textarea{font:400 16px Fredoka,system-ui,sans-serif;color:var(--ink);borde
 input:focus,textarea:focus{outline:none;border-color:var(--alt)}
 textarea{resize:vertical;min-height:90px}
 .count{font-weight:400;font-size:12px;color:var(--muted);text-align:right}
-.seg{border:0;padding:0;margin:0;display:grid;gap:8px}
-.seg legend{font-weight:600;font-size:15px;margin-bottom:6px;padding:0}
-.seg label{display:block;cursor:pointer}
-.seg input{position:absolute;opacity:0;width:1px;height:1px}
-.seg span{display:block;border:2px solid rgba(255,255,255,.9);border-radius:12px;padding:12px;background:rgba(255,255,255,.6);text-align:center}
-.seg input:checked+span{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,#fff);font-weight:600}
-.seg input:focus-visible+span{outline:2px solid var(--alt)}
-.stepper{display:flex;gap:8px;align-items:center}
-.stepper input{text-align:center;width:80px}
-.stepper button{width:48px;height:48px;border-radius:50%;border:0;background:var(--alt);color:#fff;font:700 24px Fredoka;cursor:pointer}
 .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
 form .btn{justify-self:center;min-width:200px}
 .msg{margin:0;text-align:center;min-height:1.3em;font-size:15px}
 .msg.ok{color:#1f8a3a;font-weight:600}
 .msg.err{color:#c62828;font-weight:600}
-.closed,.soon{font:600 18px Fredoka;color:var(--muted)}
+.soon{font:600 18px Fredoka;color:var(--muted)}
 
 /* wishes wall */
 .wall{list-style:none;margin:24px auto 0;padding:0;max-width:420px;display:grid;gap:12px;text-align:left}
@@ -237,6 +227,9 @@ form .btn{justify-self:center;min-width:200px}
 .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;
   background:rgba(255,255,255,.85);color:var(--ink);font:700 30px/1 Fredoka;padding:0 0 4px}
 .lb-nav.prev{left:10px}.lb-nav.next{right:10px}
+.lightbox.single .lb-nav{display:none}
+[data-zoom]{cursor:zoom-in}
+[data-zoom][role=button]:focus-visible{outline:3px solid var(--alt);outline-offset:3px}
 .lb-x{position:absolute;top:max(12px,env(safe-area-inset-top));right:12px;width:44px;height:44px;border-radius:50%;border:0;background:#fff;font:700 26px/1 Fredoka;cursor:pointer}
 
 /* ============ VARIANT A: Balloon Arch Stage ============ */
@@ -259,7 +252,8 @@ form .btn{justify-self:center;min-width:200px}
 .A-hero .torans{margin-bottom:10px}
 .A-hero .tagline{margin:0 0 12px;font:700 25px/1.15 Caveat,cursive;color:#fff7d6;text-wrap:balance}
 .A-hero .b{animation:sway 3s ease-in-out infinite alternate;animation-delay:calc(var(--k,0) * -1s)}
-.A-hero .photo-wrap .crown{animation:bob 2.4s ease-in-out infinite}
+.A-hero .photo-wrap .crown{animation:crownbob 2.4s ease-in-out infinite}
+@keyframes crownbob{50%{translate:0 -3px}}
 .A-hero .marquee span{animation:glow 2.4s ease-in-out infinite;animation-delay:calc(var(--i) * .18s)}
 @keyframes glow{50%{color:#fff;text-shadow:0 0 10px #fff3b0,0 0 22px #ffb800,0 3px 0 #c98f00}}
 .A-hero .top{position:relative;z-index:3;padding:0 18px}
@@ -277,7 +271,7 @@ form .btn{justify-self:center;min-width:200px}
   background:radial-gradient(circle at 50% 100%,transparent 42%,#8e44ad 42% 47%,#3d7bf0 47% 54%,#2fbf55 54% 61%,#ffd23f 61% 68%,#ff8c2a 68% 75%,#f0453a 75% 82%,transparent 82%);opacity:.85}
 .A-hero .photo-wrap{position:absolute;left:50%;top:60%;width:46%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
   border:6px solid #fff;box-shadow:0 0 0 4px var(--gold),0 10px 24px rgba(0,0,0,.25);z-index:2}
-.A-hero .photo-wrap .crown{position:absolute;width:44%;left:50%;top:-24%;transform:translateX(-50%) rotate(-8deg);z-index:3;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))}
+.A-hero .photo-wrap .crown{position:absolute;width:38%;left:51%;top:-7%;transform:translateX(-50%) rotate(-6deg);transform-origin:50% 100%;z-index:3;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))}
 .A-hero .stage{position:relative;background:linear-gradient(#7ccf4a,#5cb338);padding:16px 12px 18px;border-top:6px solid #4c9a2c;z-index:2}
 .A-hero .stage::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:#b33a3a}
 .A-hero .marquee{display:flex;justify-content:center;gap:4px;margin:-46px 0 6px}
@@ -451,9 +445,7 @@ form .btn{justify-self:center;min-width:200px}
   .A-months .ball{transition:transform .25s ease}
   .A-months .m:hover .ball{transform:scale(1.06) rotate(-3deg)}
   .dock a:not(:first-child):hover{background:rgba(0,0,0,.05)}
-  .lb-nav:hover,.lb-x:hover{background:#fff}
-  .stepper button:hover{filter:brightness(1.1)}
-}
+  .lb-nav:hover,.lb-x:hover{background:#fff}}
 
 /* ============ laptop / desktop ============ */
 @media (min-width:900px){
