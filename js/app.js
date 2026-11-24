@@ -1,7 +1,9 @@
 // Boots the Invite: variant, intro, music, countdown, Wishes Wall, gallery lightbox.
 
 const params = new URLSearchParams(location.search);
-const VARIANT = params.get('variant') === 'C' ? 'C' : 'A';
+// ?theme= (or legacy ?variant=) picks a theme; unknown or unbuilt falls back to CONTENT.theme, then A.
+const themeOk = (k) => !!(k && THEMES[k] && HERO[k] && MONTHS_SEC[k]);
+const VARIANT = [params.get('theme'), params.get('variant'), CONTENT.theme, 'A'].find(themeOk);
 const $ = (sel, root = document) => root.querySelector(sel);
 
 function boot() {
@@ -13,7 +15,11 @@ function boot() {
     let w = innerWidth;
     addEventListener('resize', () => { if (innerWidth !== w) { w = innerWidth; buildArch(); } });
   }
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) playIntro();
+  if (THEME_INIT[VARIANT]) THEME_INIT[VARIANT]();
+  if (CONTENT.themePicker) initThemePicker();
+  let skipIntro = false;
+  try { skipIntro = sessionStorage.getItem('skipIntro') === '1'; sessionStorage.removeItem('skipIntro'); } catch (_) {}
+  if (!skipIntro && !matchMedia('(prefers-reduced-motion: reduce)').matches) playIntro();
   startMusic();
   startCountdown();
   initWishes();
@@ -22,10 +28,26 @@ function boot() {
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) initReveal();
 }
 
+/* ---------- theme picker: preview each theme; reloads with ?theme=X and skips the intro ---------- */
+function initThemePicker() {
+  const opts = Object.entries(THEMES).filter(([k]) => themeOk(k));
+  document.body.insertAdjacentHTML('beforeend', `
+    <label class="theme-pick" id="theme-pick"><span aria-hidden="true">🎨</span><span class="sr">Theme</span>
+      <select>${opts.map(([k, t]) => `<option value="${k}"${k === VARIANT ? ' selected' : ''}>${esc(t.icon)} ${esc(t.name)}</option>`).join('')}</select>
+    </label>`);
+  $('#theme-pick select').addEventListener('change', (e) => {
+    const p = new URLSearchParams(location.search);
+    p.delete('variant');
+    p.set('theme', e.target.value);
+    try { sessionStorage.setItem('skipIntro', '1'); } catch (_) {}
+    location.search = p.toString();
+  });
+}
+
 /* ---------- scroll reveal: cards rise in as they enter the screen ---------- */
 function initReveal() {
   if (!('IntersectionObserver' in window)) return;
-  const els = document.querySelectorAll('.sec h2, .eyebrow, .cd-u, .invite-card, .timeline li, .ticket, .pola, .A-months .m, .C-months .pc, .stat, .wish, .yr');
+  const els = document.querySelectorAll('.sec h2, .eyebrow, .cd-u, .invite-card, .timeline li, .ticket, .pola, .A-months .m, .C-months .pc, .R-months .rp, .S-months .m,.stat, .wish, .yr');
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }), { rootMargin: '0px 0px -8% 0px' });
@@ -142,20 +164,35 @@ const fmtDate = (ts) => {
   return isNaN(d) ? '' : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 };
 
+const WISH_STICKERS = ['🎈', '🎂', '💛', '🧸', '🌟', '🎁', '🍰', '🦋', '🌈', '👑'];
+// Same name + message always gets the same tilt and sticker, so a pending card keeps its look.
+// Card colour cycles by position (CSS nth-child), so neighbours always differ.
+const hashStr = (s) => [...s].reduce((h, c) => (Math.imul(h, 31) + c.codePointAt(0)) >>> 0, 7);
+
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+};
+
 // textContent only: Wishes are user input.
 function wishCard({ name, message, ts }, pending = false) {
-  const li = document.createElement('li');
-  li.className = pending ? 'wish pending' : 'wish';
-  const p = document.createElement('p');
-  p.textContent = message;
-  const by = document.createElement('div');
-  by.className = 'by';
-  const b = document.createElement('b');
-  b.textContent = name;
-  const t = document.createElement('span');
-  t.textContent = pending ? 'sending…' : fmtDate(ts);
-  by.append('— ', b, ' ', t);
-  li.append(p, by);
+  const h = hashStr(name + message);
+  const li = el('li', pending ? 'wish pending' : 'wish');
+  li.style.setProperty('--tilt', `${(((h >>> 3) % 5) - 2) * 0.7}deg`);
+
+  const ava = el('span', 'w-ava', ([...name.trim()][0] || '♥').toUpperCase());
+  ava.setAttribute('aria-hidden', 'true');
+  const stk = el('span', 'w-stk', WISH_STICKERS[(h >>> 5) % WISH_STICKERS.length]);
+  stk.setAttribute('aria-hidden', 'true');
+
+  const body = el('div', 'w-body');
+  const by = el('div', 'by');
+  by.append('— ', el('b', '', name), ' ', el('span', '', pending ? 'sending…' : fmtDate(ts)));
+  body.append(el('p', '', message), by);
+
+  li.append(ava, body, stk);
   return li;
 }
 
@@ -164,7 +201,12 @@ function initWishes() {
   const form = $('#wish-form', sec);
   const wall = $('.wall', sec);
   const note = $('.wall-note', sec);
-  if (!backendReady()) { form.hidden = true; $('.soon', sec).hidden = false; return; }
+  const countEl = $('.board-count', sec);
+  const setCount = () => {
+    const n = wall.children.length;
+    countEl.textContent = n ? `${n} ${n === 1 ? 'wish' : 'wishes'}` : '';
+  };
+  if (!backendReady()) { form.hidden = true; $('.board', sec).hidden = true; $('.soon', sec).hidden = false; return; }
 
   const msg = form.elements.message;
   const count = $('.count', form);
@@ -176,6 +218,7 @@ function initWishes() {
     const pending = [...wall.children];
     wall.replaceChildren(...pending, ...res.wishes.map((w) => wishCard(w)));
     note.textContent = wall.children.length ? '' : 'Be the first to leave a wish 💌';
+    setCount();
   });
 
   form.addEventListener('submit', async (e) => {
@@ -199,6 +242,7 @@ function initWishes() {
       card.classList.remove('pending');
       $('.by span', card).textContent = fmtDate(now());
       say(form, 'Thank you for your wish! 💛', 'ok');
+      setCount();
     } else {
       card.remove();
       msg.value = message;

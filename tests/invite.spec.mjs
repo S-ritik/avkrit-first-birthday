@@ -57,7 +57,28 @@ test('?variant=C switches look; unknown variant falls back to A', async ({ page 
   await expect(page.locator('.A-months .m')).toHaveCount(12);
 });
 
-for (const v of ['A', 'C']) {
+for (const v of ['R', 'S']) {
+  test(`?theme=${v} renders its own hero and 12 month tiles`, async ({ page }) => {
+    await open(page, { query: `?theme=${v}` });
+    await expect(page.locator('body')).toHaveClass(new RegExp(`\\b${v}\\b`));
+    await expect(page.locator(`.${v}-hero`)).toBeVisible();
+    await expect(page.locator('h1')).toContainText('Our Little Prince Avkrit turns 1');
+    await expect(page.locator('#hero .shloka .tr')).toContainText('remove every obstacle');
+    await expect(page.locator('#months .tag')).toHaveCount(12);
+  });
+}
+
+test('theme picker lists all four themes and switches by reloading with ?theme=', async ({ page }) => {
+  await open(page);
+  const sel = page.locator('#theme-pick select');
+  await expect(sel.locator('option')).toHaveText([/Balloon Arch/, /Storybook Polaroid/, /Royal Prince/, /Superhero/]);
+  await sel.selectOption('R');
+  await expect(page).toHaveURL(/theme=R/);
+  await expect(page.locator('body')).toHaveClass(/\bR\b/);
+  await expect(page.locator('#theme-pick select')).toHaveValue('R');
+});
+
+for (const v of ['A', 'C', 'R', 'S']) {
   test(`variant ${v} fits 320px with no horizontal scroll`, async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 640 });
     await open(page, { query: `?variant=${v}` });
@@ -66,7 +87,7 @@ for (const v of ['A', 'C']) {
   });
 }
 
-for (const v of ['A', 'C']) {
+for (const v of ['A', 'C', 'R', 'S']) {
   test(`variant ${v} on a 1366px laptop: wide page, 2-column hero, months fit without side-scroll`, async ({ page }) => {
     await page.setViewportSize({ width: 1366, height: 768 });
     await open(page, { query: `?variant=${v}` });
@@ -302,5 +323,9 @@ test('no page errors', async ({ page }) => {
   await page.clock.runFor(3000);
   await page.goto('/?variant=A');
   await page.clock.runFor(3000);
+  for (const t of ['R', 'S']) {
+    await page.goto(`/?theme=${t}`);
+    await page.clock.runFor(3000);
+  }
   expect(errors).toEqual([]);
 });

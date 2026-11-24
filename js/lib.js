@@ -64,8 +64,19 @@ function calendarUrl() {
   return `https://calendar.google.com/calendar/render?${p}`;
 }
 
-const shareUrl = () =>
-  `https://wa.me/?text=${encodeURIComponent(`${CONTENT.headline}! 🎈 ${CONTENT.dateText}, ${CONTENT.timeText}.\n${CONTENT.siteUrl}`)}`;
+// api.whatsapp.com, not wa.me: the wa.me redirect garbles emojis outside the basic plane (📅 📍 🎂).
+const shareUrl = () => {
+  const { title, hi, en, wishReminder } = CONTENT.shareText;
+  const line = '✨━━━━━━━━━━━━✨';
+  const text = [
+    title,
+    `👉 Invite / निमंत्रण: ${CONTENT.siteUrl}`,
+    '', ...hi, '', line, '', ...en, '', line, '',
+    ...wishReminder, '',
+    `🗺️ Map / नक्शा: ${CONTENT.venue.mapUrl}`,
+  ].join('\n');
+  return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+};
 
 /* ---------- backend client (Apps Script web app) ---------- */
 const backendReady = () => /^https:\/\/script\.google\.com\/.+\/exec$/.test(CONTENT.backendUrl);

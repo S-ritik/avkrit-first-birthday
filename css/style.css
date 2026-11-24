@@ -197,16 +197,45 @@ form .btn{justify-self:center;min-width:200px}
 .msg.err{color:#c62828;font-weight:600}
 .soon{font:600 18px Fredoka;color:var(--muted)}
 
-/* wishes wall */
-.wall{list-style:none;margin:24px auto 0;padding:0;max-width:420px;display:grid;gap:12px;text-align:left}
-.wish{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 3px 10px rgba(0,0,0,.07);border-left:5px solid var(--gold);overflow-wrap:anywhere}
-.wish:nth-child(3n+2){border-left-color:var(--accent)}
-.wish:nth-child(3n){border-left-color:var(--alt)}
-.wish p{margin:0 0 6px;white-space:pre-wrap;line-height:1.45}
+/* wishes form: envelope tucked on the corner */
+#wish-form{position:relative}
+#wish-form::after{content:"💌";position:absolute;top:-20px;right:14px;font-size:34px;rotate:14deg;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18));pointer-events:none}
+
+/* wishes board: a framed wall of cards. Themes restyle .board, .wish and slots --w0..--w3. */
+.wishes{--w0:#e53950;--w1:#3d7bf0;--w2:#2fbf55;--w3:#ff8c2a}
+.board{max-width:440px;margin:30px auto 0;padding:18px 14px 8px;border-radius:26px;position:relative;
+  background:linear-gradient(160deg,rgba(255,255,255,.6),rgba(255,255,255,.25));
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);box-shadow:var(--glass-shadow),var(--glass-ring)}
+.board-head{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 10px;margin:0 0 18px}
+.board-title{font:var(--head-w) 22px/1.1 var(--head);color:var(--h2,var(--ink))}
+.board-title::before,.board-title::after{content:"✨";margin:0 6px;font-size:.8em}
+.board-count{font:600 12px/1 Fredoka,sans-serif;padding:5px 10px;border-radius:99px;background:var(--accent);color:var(--accent-ink);letter-spacing:.5px}
+.board-count:empty{display:none}
+.wall{list-style:none;margin:0;padding:0;display:grid;gap:18px;text-align:left}
+.wish{--wc:var(--w0);position:relative;display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start;
+  padding:16px 18px 14px 14px;border-radius:18px;rotate:var(--tilt,0deg);overflow-wrap:anywhere;
+  background:linear-gradient(150deg,color-mix(in srgb,var(--wc) 16%,rgba(255,255,255,.85)),rgba(255,255,255,.6));
+  box-shadow:0 8px 20px color-mix(in srgb,var(--wc) 22%,transparent),inset 0 0 0 1px rgba(255,255,255,.8)}
+.wish:nth-child(4n+2){--wc:var(--w1)}.wish:nth-child(4n+3){--wc:var(--w2)}.wish:nth-child(4n){--wc:var(--w3)}
+.w-ava{position:relative;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font:700 19px/1 var(--head);color:#fff;
+  background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.5),transparent 38%),var(--wc);
+  box-shadow:0 3px 8px color-mix(in srgb,var(--wc) 45%,transparent),inset 0 -3px 0 rgba(0,0,0,.12);text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.w-body{position:relative;min-width:0}
+.w-body::before{content:"\201C";position:absolute;right:-4px;bottom:-30px;font:700 72px/1 Georgia,serif;color:var(--wc);opacity:.16;pointer-events:none}
+.wish p{margin:2px 0 8px;white-space:pre-wrap;line-height:1.5;font-size:16px}
 .wish .by{font-size:13px;color:var(--muted)}
+.wish .by b{color:color-mix(in srgb,var(--wc) 70%,#000)}
 .wish .by span{opacity:.8}
+.w-stk{position:absolute;right:-8px;top:-14px;font-size:26px;line-height:1;rotate:14deg;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));pointer-events:none}
 .wish.pending{opacity:.6}
-.wall-note{color:var(--muted);font-size:14px}
+.wall-note{color:var(--muted);font-size:14px;margin:10px 0}
+@media (prefers-reduced-motion:no-preference){
+  .w-stk{animation:stk-bob 3s ease-in-out infinite}
+  .wish:nth-child(even) .w-stk{animation-delay:-1.5s}}
+@keyframes stk-bob{50%{translate:0 -4px;rotate:4deg}}
+@media (min-width:900px){
+  .board{max-width:980px;padding:26px 24px 12px}
+  .wall{grid-template-columns:repeat(auto-fill,minmax(290px,1fr));align-items:start;gap:22px}}
 
 /* footer */
 .footer{padding-top:40px;padding-bottom:calc(34px + env(safe-area-inset-bottom))}
@@ -411,12 +440,19 @@ form .btn{justify-self:center;min-width:200px}
 .dock a span{font-size:19px;line-height:1.1}
 .dock a:first-child{background:var(--accent);color:#fff}
 
+/* ============ theme picker (preview only; CONTENT.themePicker) ============ */
+.theme-pick{position:fixed;top:calc(10px + env(safe-area-inset-top));right:10px;z-index:45;display:flex;align-items:center;gap:4px;
+  padding:4px 4px 4px 10px;border-radius:999px;background:rgba(255,255,255,.92);box-shadow:0 4px 14px rgba(0,0,0,.18);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-size:16px}
+.theme-pick select{font:600 13px Fredoka,system-ui,sans-serif;color:#2d2a32;border:0;background:transparent;padding:6px 4px;max-width:44vw;cursor:pointer}
+.theme-pick select:focus-visible{outline:2px solid #3d7bf0;border-radius:999px}
+
 /* ============ scroll reveal (only added when motion is allowed) ============ */
 .rv{opacity:0;translate:0 18px;transition:opacity .6s ease var(--rd,0ms),translate .6s cubic-bezier(.2,.8,.3,1) var(--rd,0ms)}
 .rv.in{opacity:1;translate:none}
 
 /* ============ glass layer: frosted cards over the party backdrop ============ */
-.cd-u,.stat,.invite-card,.timeline li,form,.wish,.yr-bar,.dock{
+.cd-u,.stat,.invite-card,.timeline li,form,.yr-bar,.dock{
   background:var(--glass-bg);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
   box-shadow:var(--glass-shadow),var(--glass-ring)}
 .yr-bar{box-shadow:inset 0 2px 5px rgba(70,40,130,.16),inset 0 0 0 1px rgba(255,255,255,.75)}
@@ -426,16 +462,58 @@ form .btn{justify-self:center;min-width:200px}
 .dock{background:linear-gradient(140deg,rgba(255,255,255,.9),rgba(255,255,255,.72))}
 .tk-body{background:linear-gradient(150deg,#fff,#fff8ea)}
 /* glossy sheen across the top of glass cards, under their content */
-.stat::before,.timeline li::after,.wish::before,.cd-u::before{content:"";position:absolute;left:0;right:0;top:0;height:48%;z-index:-1;pointer-events:none;
+.stat::before,.timeline li::after,.cd-u::before{content:"";position:absolute;left:0;right:0;top:0;height:48%;z-index:-1;pointer-events:none;
   border-radius:inherit;background:linear-gradient(rgba(255,255,255,.45),rgba(255,255,255,0))}
-.stat,.wish{position:relative}
+.stat{position:relative}
 .A .cd-u::before{left:18%;top:9%;right:auto;width:20%;height:26%;border-radius:50%;rotate:-28deg;background:rgba(255,255,255,.75);z-index:0}
 .ribbon:not(.rev){background:linear-gradient(#ffdd6e,#f5c542 55%,#e6b12a)}
 .ribbon.rev{background:linear-gradient(#5d95ff,#3d7bf0 55%,#2c63d4)}
 .cd-u b{position:relative;z-index:1}
 
+/* ============ wishes board, theme A: balloon cards under a rainbow ============ */
+.A .wishes{--w0:#ff6fb5;--w1:#3d7bf0;--w2:#2fbf55;--w3:#ff8c2a}
+.A .board{padding-top:30px;
+  background:linear-gradient(90deg,#f0453a,#ff8c2a,#ffd23f,#2fbf55,#3d7bf0,#8e44ad) top/100% 8px no-repeat,
+    radial-gradient(circle,rgba(255,255,255,.9) 1.5px,transparent 2px) 0 0/22px 22px,
+    linear-gradient(170deg,rgba(214,240,255,.75),rgba(255,255,255,.4))}
+.A .board::before{content:"🎈";position:absolute;left:-10px;top:-26px;font-size:40px;rotate:-14deg;filter:drop-shadow(0 4px 4px rgba(0,0,0,.18))}
+.A .board::after{content:"🎈";position:absolute;right:-8px;top:-20px;font-size:32px;rotate:12deg;filter:hue-rotate(200deg) drop-shadow(0 4px 4px rgba(0,0,0,.18))}
+.A .board-title{color:#1f6fb2}
+.A .wish{border-radius:22px;box-shadow:0 8px 20px color-mix(in srgb,var(--wc) 25%,transparent),inset 0 0 0 2px color-mix(in srgb,var(--wc) 35%,#fff)}
+/* avatar as a balloon on a string */
+.A .w-ava{height:46px;border-radius:50% 50% 47% 47%/56% 56% 44% 44%;margin-bottom:12px}
+.A .w-ava::before{content:"";position:absolute;left:50%;bottom:-5px;translate:-50% 0;border:4px solid transparent;border-bottom:5px solid var(--wc);border-top:0}
+.A .w-ava::after{content:"";position:absolute;left:50%;top:calc(100% + 5px);width:2px;height:12px;background:color-mix(in srgb,var(--wc) 60%,#888);border-radius:1px;rotate:8deg;transform-origin:top}
+
+/* ============ wishes board, theme C: sticky notes on a corkboard ============ */
+.C .wishes{--w0:#e24d6a;--w1:#5b7fd6;--w2:#3f9e4a;--w3:#d9822b}
+.C #wish-form::before{content:"";position:absolute;top:-11px;left:50%;width:90px;height:24px;translate:-50% 0;rotate:-3deg;background:rgba(255,194,217,.85)}
+.C .board{border-radius:6px;padding:26px 16px 14px;-webkit-backdrop-filter:none;backdrop-filter:none;
+  background:radial-gradient(circle at 20% 30%,rgba(120,70,20,.35) 1px,transparent 1.6px) 0 0/9px 9px,
+    radial-gradient(circle at 70% 60%,rgba(255,235,200,.35) 1px,transparent 1.6px) 0 0/13px 13px,#c8955a;
+  border:12px solid #9a6536;box-shadow:inset 0 0 0 2px #7a4a22,inset 0 6px 14px rgba(0,0,0,.25),0 14px 28px rgba(80,40,10,.25)}
+.C .board-head{width:fit-content;margin:-6px auto 22px;padding:6px 18px 4px;background:#fffdf5;rotate:-2deg;box-shadow:0 4px 8px rgba(0,0,0,.2)}
+.C .board-title{font:700 30px/1 Caveat,cursive;color:#3a3550}
+.C .board-title::before,.C .board-title::after{content:"📌"}
+.C .board-count{font-family:Caveat,cursive;font-size:16px;background:var(--accent)}
+.C .wall-note{color:#fffdf5;font:700 20px Caveat,cursive}
+.C .wish{--note:#fff4b0;rotate:calc(var(--tilt,0deg) * 2.2);border-radius:2px 2px 18px 2px;padding-top:22px;
+  background:repeating-linear-gradient(transparent 0 26px,rgba(91,127,214,.16) 26px 27px) 0 18px,var(--note);
+  box-shadow:0 10px 16px rgba(60,30,0,.28),inset 0 -14px 18px -12px rgba(0,0,0,.08)}
+.C .wish:nth-child(4n+2){--note:#ffd9e6}.C .wish:nth-child(4n+3){--note:#dcebff}.C .wish:nth-child(4n){--note:#dff5cf}
+/* washi tape across the top */
+.C .wish::before{content:"";position:absolute;top:-10px;left:50%;width:80px;height:22px;translate:-50% 0;rotate:calc(var(--tilt,0deg) * -3 - 2deg);
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 6px,transparent 6px 12px),color-mix(in srgb,var(--wc) 45%,rgba(255,255,255,.4))}
+.C .w-ava{border-radius:3px;rotate:-4deg;background:#fff;color:var(--wc);font:700 24px/1 Caveat,cursive;text-shadow:none;box-shadow:0 2px 4px rgba(0,0,0,.18);border:3px solid #fff;outline:1px solid rgba(0,0,0,.06)}
+.C .wish p{font:600 22px/27px Caveat,cursive;color:#2d2a40;margin-top:0}
+.C .wish .by{font:600 17px Caveat,cursive}
+.C .w-body::before{display:none}
+.C .w-stk{top:auto;bottom:-10px;right:-6px}
+
 /* ============ mouse / trackpad hover ============ */
 @media (hover:hover){
+  .wish{transition:opacity .6s ease var(--rd,0ms),translate .6s cubic-bezier(.2,.8,.3,1) var(--rd,0ms),rotate .25s ease,scale .25s ease}
+  .wish:hover{rotate:0deg;scale:1.02;z-index:2}
   .btn{transition:transform .15s,filter .15s}
   .btn:hover{filter:brightness(1.08);transform:translateY(-2px)}
   .pola{transition:transform .25s ease,box-shadow .25s ease}

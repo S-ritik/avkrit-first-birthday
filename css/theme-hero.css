@@ -1,0 +1,318 @@
+/* ============ THEME S: Little Superhero (comic-book pop art) ============ */
+.S{
+  --ink:#14161f;--muted:#3b4256;--accent:#e11d2a;--alt:#1d4ed8;--gold:#ffc72c;--yel:#ffd23f;--k:#111;
+  --head:"Bangers","Fredoka",system-ui,sans-serif;--head-w:400;--head-size:34px;--h2:#111;
+  --page-bg:#bfe3ff;
+  --party-bg:radial-gradient(circle,rgba(29,78,216,.13) 1.6px,transparent 2.1px) 0 0/16px 16px,linear-gradient(172deg,#b4dcff 0%,#dcefff 42%,#fff6cc 100%);
+  /* thick black text outline + hard drop */
+  --ol:-2px -2px 0 #111,2px -2px 0 #111,-2px 2px 0 #111,2px 2px 0 #111,0 -2px 0 #111,0 2px 0 #111,-2px 0 0 #111,2px 0 0 #111;
+  --pop:5px 5px 0 #111;
+  --emblem:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 112'%3E%3Cpath d='M50 5 L92 19 Q93 72 50 107 Q7 72 8 19 Z' fill='%23ffd23f' stroke='%23111' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M50 17 L81 27 Q81 67 50 94 Q19 67 19 27 Z' fill='%23e11d2a'/%3E%3Cpolygon points='50,34 55.9,49.9 72.8,50.6 59.5,61.1 64.1,77.4 50,68 35.9,77.4 40.5,61.1 27.2,50.6 44.1,49.9' fill='%23ffd23f' stroke='%23111' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* ---------- backdrop: light halftone sky, comic stars; no balloons/confetti ---------- */
+.S .party-bg .orb,.S .party-bg .cf,.S .party-bg .fb{display:none}
+.S .party-bg .tw{filter:drop-shadow(0 0 0 #111) drop-shadow(1px 1px 0 #111)}
+
+/* ---------- placeholders ---------- */
+.S .photo-ph{background:radial-gradient(circle,rgba(225,29,42,.22) 1.4px,transparent 1.9px) 0 0/8px 8px,#fff6cc;color:#111;font:400 14px/1.2 Bangers,sans-serif;letter-spacing:1px}
+
+/* ---------- section headings: comic caption boxes ---------- */
+.S .sec h2,.S .S-months h2{width:fit-content;max-width:100%;margin:0 auto 22px;padding:9px 18px 6px;background:var(--yel);color:#111;
+  border:3px solid #111;box-shadow:var(--pop);transform:rotate(-2deg);letter-spacing:1.5px;line-height:1}
+.S .sec:nth-of-type(even) h2{transform:rotate(1.5deg)}
+.S .sec h2::after{display:none}
+.S .eyebrow{font:400 16px/1.2 Bangers,sans-serif;letter-spacing:2.5px;color:var(--accent);margin-bottom:12px}
+.S .eyebrow::before,.S .eyebrow::after{content:"★";font-size:13px;color:var(--alt)}
+.S .sec .sub{color:var(--muted)}
+.S .sec .sub.slogan{font:400 21px/1.2 Bangers,sans-serif;letter-spacing:.8px;color:var(--alt);margin-top:-4px}
+/* red / yellow / blue pennants with black ink */
+.S .sec:not(.footer)::before{filter:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 56'%3E%3Cpath d='M0 4Q120 56 240 4' fill='none' stroke='%23111' stroke-width='1.6'/%3E%3Cg stroke='%23111' stroke-width='1.6' stroke-linejoin='round'%3E%3Cpath transform='translate(20 11.9) rotate(19.9)' d='M-12 0H12L0 22Z' fill='%23e11d2a'/%3E%3Cpath transform='translate(60 23.5) rotate(12.2)' d='M-12 0H12L0 22Z' fill='%23ffd23f'/%3E%3Cpath transform='translate(100 29.3) rotate(4.1)' d='M-12 0H12L0 22Z' fill='%231d4ed8'/%3E%3Cpath transform='translate(140 29.3) rotate(-4.1)' d='M-12 0H12L0 22Z' fill='%23e11d2a'/%3E%3Cpath transform='translate(180 23.5) rotate(-12.2)' d='M-12 0H12L0 22Z' fill='%23ffd23f'/%3E%3Cpath transform='translate(220 11.9) rotate(-19.9)' d='M-12 0H12L0 22Z' fill='%231d4ed8'/%3E%3C/g%3E%3C/svg%3E")}
+
+/* ---------- solid comic panels replace the frosted glass ---------- */
+.S .cd-u,.S .stat,.S .invite-card,.S .timeline li,.S form,.S .wish,.S .dock,.S .fam{
+  -webkit-backdrop-filter:none;backdrop-filter:none;background:#fff;border:3px solid #111;border-radius:8px;box-shadow:var(--pop)}
+.S .stat::before,.S .timeline li::after,.S .wish::before{display:none}
+
+/* ---------- buttons: ink outline + hard shadow ---------- */
+.S .btn{font:400 20px/1 Bangers,sans-serif;letter-spacing:1.3px;border:3px solid #111;border-radius:12px;padding:13px 24px 11px;
+  box-shadow:4px 4px 0 #111;text-shadow:2px 2px 0 rgba(0,0,0,.3)}
+.S .btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #111}
+.S .btn:focus-visible{outline:3px solid var(--yel);outline-offset:3px}
+.S .footer .btn.wa{color:#0f7a35;text-shadow:none}
+
+/* ---------- ribbons: tilted red / yellow bands ---------- */
+.S .ribbon{border-block:3px solid #111;box-shadow:0 4px 0 rgba(0,0,0,.18);margin:4px -14px;padding:9px 0 7px;transform:rotate(-1.4deg)}
+.S .ribbon:not(.rev){background:var(--yel);color:#111}
+.S .ribbon.rev{background:var(--accent);color:#fff;transform:rotate(1.4deg)}
+.S .rb-track span{font:400 19px/1.1 Bangers,sans-serif;letter-spacing:1.3px}
+.S .rb-track span::after{content:"★";color:var(--accent)}
+.S .ribbon.rev .rb-track span{text-shadow:2px 2px 0 #111}
+.S .ribbon.rev .rb-track span::after{color:var(--yel)}
+
+/* ============ HERO ============ */
+.S-hero{position:relative;padding:0 18px 4px;color:#fff;overflow:hidden;
+  background:radial-gradient(circle,rgba(255,255,255,.13) 1.5px,transparent 2px) 0 0/12px 12px,
+    radial-gradient(ellipse at 50% 64%,transparent 35%,rgba(6,18,70,.5) 100%),
+    repeating-conic-gradient(from 0deg at 50% 64%,#2a5ce2 0 7deg,#1f48c4 7deg 14deg)}
+.S-hero .torans{margin:0 -18px 14px}
+/* blessing: a clean cream card, kept out of the comic styling */
+.S-hero .bless{max-width:420px;margin:0 auto;padding:20px 16px 18px;background:#fffaf0;border-radius:18px;color:#7a4d00;
+  box-shadow:0 0 0 3px var(--gold),0 0 0 7px rgba(255,250,240,.35),0 14px 30px rgba(6,18,70,.35)}
+.S-hero .blessing{color:#8a5a00}
+.S-hero .lg{width:118px;height:118px;margin:12px auto 0;border-radius:50%;overflow:hidden;border:4px solid #fff;box-shadow:0 0 0 3px var(--gold),0 6px 14px rgba(0,0,0,.18)}
+.S-hero .lg-cap{text-align:center;font:600 14px Fredoka,sans-serif;color:#8a5a00;margin-top:8px}
+.S-hero .shloka .deva{color:#7a4d00}
+.S-hero .shloka .tr{color:#5a5570}
+
+/* the comic panel */
+.S-hero .panel{position:relative;max-width:400px;margin:30px auto 0;aspect-ratio:1/.98;border:4px solid #111;box-shadow:8px 8px 0 #111;transform:rotate(-1.5deg);
+  background:radial-gradient(circle,rgba(255,255,255,.5) 1.6px,transparent 2.1px) 0 0/10px 10px,
+    repeating-conic-gradient(from 0deg at 50% 52%,#8fd0ff 0 8deg,#b5e1ff 8deg 16deg)}
+.S-hero .cap-box{position:absolute;left:-10px;top:-16px;z-index:5;margin:0;padding:6px 10px 4px;background:var(--yel);color:#111;border:3px solid #111;
+  box-shadow:3px 3px 0 #111;font:400 15px/1 Bangers,sans-serif;letter-spacing:1px;transform:rotate(-3deg)}
+.S-hero .frame{position:absolute;left:7%;right:7%;top:6%;aspect-ratio:1}
+.S-hero .frame .star{position:absolute;inset:0;width:100%;height:100%;color:var(--yel);filter:drop-shadow(4px 4px 0 rgba(0,0,0,.25));animation:S-spin 60s linear infinite}
+@keyframes S-spin{to{rotate:360deg}}
+.S-hero .cape{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;transform-origin:40% 45%;animation:S-cape 2.4s ease-in-out infinite alternate}
+@keyframes S-cape{to{transform:rotate(-3deg) scaleX(1.05)}}
+.S-hero .ph{position:absolute;inset:19%;z-index:2;border-radius:50%;overflow:hidden;border:4px solid #111;box-shadow:0 0 0 5px #fff,0 0 0 9px #111}
+.S-hero .emblem{position:absolute;left:50%;bottom:4%;width:23%;z-index:3;translate:-50% 0;rotate:-6deg;filter:drop-shadow(3px 3px 0 rgba(0,0,0,.35))}
+
+/* sound-effect bursts */
+.S .burst{position:absolute;z-index:4;display:grid;place-items:center;width:var(--w,26%);aspect-ratio:1;pointer-events:none}
+.S .burst svg{position:absolute;inset:0;width:100%;height:100%}
+.S .burst b{position:relative;font:400 clamp(16px,5.6vw,26px)/1 Bangers,sans-serif;letter-spacing:1px}
+.S-hero .b1{right:-14px;top:-14px;color:var(--yel);rotate:12deg;animation:S-pop 1.8s ease-in-out infinite}
+.S-hero .b1 b{color:var(--accent);text-shadow:2px 2px 0 #111}
+.S-hero .b2{left:-16px;bottom:-12px;--w:30%;color:var(--accent);rotate:-10deg;animation:S-pop 1.8s ease-in-out -.9s infinite}
+.S-hero .b2 b{color:#fff;text-shadow:var(--ol)}
+@keyframes S-pop{50%{scale:1.08}}
+
+/* headline */
+.S-hero h1{margin:30px 0 4px;text-align:center;font-weight:400;line-height:1}
+.S-hero .h1v{display:grid;justify-items:center;font-family:Bangers,sans-serif;letter-spacing:1.5px}
+.S-hero .h1v .k{font-size:26px;color:#fff;text-shadow:var(--ol),3px 3px 0 #111}
+.S-hero .h1v .nm{font-size:clamp(64px,22vw,96px);line-height:.95;color:var(--yel);letter-spacing:3px;margin-top:4px;
+  text-shadow:-3px -3px 0 #111,3px -3px 0 #111,-3px 3px 0 #111,3px 3px 0 #111,0 -3px 0 #111,0 3px 0 #111,-3px 0 0 #111,3px 0 0 #111,7px 7px 0 var(--accent),9px 9px 0 #111}
+.S-hero .h1v .tn{font-size:34px;color:#fff;text-shadow:var(--ol),3px 3px 0 #111;margin-top:2px}
+.S-hero .h1v em{font-style:normal;font-size:1.45em;color:var(--accent);display:inline-block;rotate:-8deg;margin:0 2px;
+  text-shadow:-2px -2px 0 #fff,2px -2px 0 #fff,-2px 2px 0 #fff,2px 2px 0 #fff,4px 4px 0 #111}
+/* tagline: speech bubble */
+.S-hero .tagline{position:relative;width:fit-content;max-width:330px;margin:20px auto 18px;padding:10px 16px 8px;background:#fff;color:#111;
+  border:3px solid #111;border-radius:22px;box-shadow:4px 4px 0 #111;font:400 19px/1.15 Bangers,sans-serif;letter-spacing:.8px;text-align:center;text-wrap:balance}
+.S-hero .tagline::before,.S-hero .tagline::after{content:"";position:absolute;left:30%;border-style:solid;border-color:transparent}
+.S-hero .tagline::before{top:-17px;border-width:0 8px 16px 8px;border-bottom-color:#111;transform:skewX(-25deg)}
+.S-hero .tagline::after{top:-11px;margin-left:2px;border-width:0 6px 12px 6px;border-bottom-color:#fff;transform:skewX(-25deg)}
+/* date & place: narration box */
+.S-hero .meta{width:fit-content;max-width:100%;margin:0 auto;padding:10px 18px 9px;background:var(--yel);color:#111;border:3px solid #111;
+  box-shadow:var(--pop);text-align:center;transform:rotate(1deg)}
+.S-hero .meta b{display:block;font:400 23px/1.1 Bangers,sans-serif;letter-spacing:1px}
+.S-hero .meta span{display:block;font:600 15px/1.4 Fredoka,sans-serif;margin-top:2px}
+.S-hero .scroll-cue{color:#fff;font-family:Bangers,sans-serif;font-size:15px;letter-spacing:3px;opacity:.95;padding-top:18px}
+
+/* ============ 12 LITTLE BIRTHDAYS: comic strip ============ */
+.S-months{position:relative;padding:44px 14px 46px;text-align:center}
+.S-months h2{font:400 var(--head-size)/1 var(--head)}
+.S-months .sub{color:var(--muted);font-size:14px;margin:0 0 26px}
+.S-months .strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 14px;max-width:470px;margin:0 auto}
+@media (min-width:360px){.S-months .strip{grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 10px}}
+.S-months .m{position:relative;display:flex;flex-direction:column;padding:5px 5px 8px;border:3px solid #111;box-shadow:4px 4px 0 #111;transform:rotate(var(--r));
+  background:radial-gradient(circle,var(--d,#cfe3ff) 1.3px,transparent 1.8px) 0 0/7px 7px,#fff}
+.S-months .ph{aspect-ratio:1;overflow:hidden;border:2px solid #111;background:#dff1ff}
+.S-months .cap{position:absolute;left:-7px;top:-10px;z-index:2;padding:4px 7px 3px;background:var(--yel);color:#111;border:2px solid #111;box-shadow:2px 2px 0 #111;
+  font:400 14px/1 Bangers,sans-serif;letter-spacing:.8px;transform:rotate(-4deg);pointer-events:none;white-space:nowrap}
+.S-months .lbl{margin-top:6px}
+.S-months .lbl small{display:block;font:600 11px/1.2 Fredoka,sans-serif;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+/* tag: speech bubble pointing up at the photo */
+.S-months .tag{position:relative;display:block;margin:10px 1px 0;padding:5px 5px 4px;background:#fff;border:2px solid #111;border-radius:12px;
+  font:400 14px/1.05 Bangers,sans-serif;letter-spacing:.5px;color:#111;font-style:normal;text-wrap:balance}
+.S-months .tag::before,.S-months .tag::after{content:"";position:absolute;left:16px;border-style:solid;border-color:transparent}
+.S-months .tag::before{top:-10px;border-width:0 6px 9px 6px;border-bottom-color:#111}
+.S-months .tag::after{top:-6px;left:18px;border-width:0 4px 6px 4px;border-bottom-color:#fff}
+/* "1 year!" as a big burst */
+.S-months .big{background:radial-gradient(circle,rgba(255,255,255,.28) 1.4px,transparent 1.9px) 0 0/7px 7px,var(--accent)}
+.S-months .big .ph{position:relative;display:grid;place-items:center;background:repeating-conic-gradient(from 0deg,#1f48c4 0 9deg,#2a5ce2 9deg 18deg)}
+.S-months .big .star{position:absolute;inset:4%;width:92%;height:92%;color:var(--yel);animation:S-spin 30s linear infinite}
+.S-months .big .ph b{position:relative;font:400 clamp(44px,15vw,64px)/1 Bangers,sans-serif;color:var(--accent);text-shadow:var(--ol),4px 4px 0 #111;rotate:-6deg}
+.S-months .big .cap{background:#fff;color:var(--accent)}
+.S-months .big .lbl small{color:#fff}
+.S-months .big .tag{background:var(--yel)}
+.S-months .big .tag::after{border-bottom-color:var(--yel)}
+
+.S .first-year h3{font:400 26px/1.1 Bangers,sans-serif;letter-spacing:1.2px;color:var(--alt)}
+.S .stat b{font:400 32px/1.1 Bangers,sans-serif;letter-spacing:1px;color:var(--accent)}
+.S .stat:nth-child(even) b{color:var(--alt)}
+.S .stat small{color:var(--muted)}
+
+/* ============ countdown: coloured comic panels ============ */
+.S .cd-u{padding:12px 0 0;overflow:hidden;background:radial-gradient(circle,rgba(255,255,255,.28) 1.4px,transparent 1.9px) 0 0/8px 8px,var(--p)}
+.S .cd-u:nth-child(1),.S .cd-u:nth-child(4){--p:var(--accent)}
+.S .cd-u:nth-child(2){--p:var(--alt)}
+.S .cd-u:nth-child(3){--p:var(--yel)}
+.S .cd-u::before,.S .cd-u::after{display:none}
+.S .cd-u b{font:400 40px/1 Bangers,sans-serif;letter-spacing:1px;color:#fff;text-shadow:var(--ol),3px 3px 0 #111}
+.S .cd-u span{position:relative;display:block;margin-top:10px;padding:4px 0 3px;background:#fff;border-top:3px solid #111;color:#111;font:400 14px/1 Bangers,sans-serif;letter-spacing:1.5px}
+.S .cd-done{font:400 40px/1.1 Bangers,sans-serif;letter-spacing:1.5px;color:var(--yel);text-shadow:var(--ol),5px 5px 0 var(--accent)}
+.S .yr-bar{height:18px;background:#fff;border:3px solid #111;box-shadow:3px 3px 0 #111;-webkit-backdrop-filter:none;backdrop-filter:none}
+.S .yr-ends{color:var(--muted);font-weight:600}
+.S .cd-note b{font-family:Bangers,sans-serif;font-weight:400;font-size:21px;letter-spacing:1px}
+
+/* ============ hosts: the formal invitation, on a bold panel ============ */
+.S .invite-card{background:#fffdf5;outline:2px solid var(--gold);outline-offset:-11px;box-shadow:8px 8px 0 #111}
+.S .hosts .lead{color:#8a5a00}
+.S .hosts .star .crown{display:none}
+.S .hosts .star::before{content:"";width:44px;aspect-ratio:100/112;background:var(--emblem) center/contain no-repeat;rotate:-8deg}
+.S .hosts .star{font-size:46px;letter-spacing:2px}
+.S .foil{background:none;color:var(--accent);-webkit-text-fill-color:currentColor;filter:none;animation:none;text-shadow:var(--ol),4px 4px 0 #111}
+.S .hosts h3{font:400 16px Bangers,sans-serif;letter-spacing:2px}
+.S .fam{border-top:7px solid var(--accent);box-shadow:3px 3px 0 #111}
+.S .fam+.fam{border-top-color:var(--alt)}
+
+/* ============ schedule ============ */
+.S .timeline{--gold:#111}
+.S .timeline li{position:relative}
+.S .timeline .ic{background:var(--yel);box-shadow:0 0 0 3px #111,3px 3px 0 3px #111}
+.S .timeline time{font:400 17px/1.1 Bangers,sans-serif;letter-spacing:1.3px}
+.S .timeline b{font-weight:700}
+.S .schedule .date{font-weight:600;color:var(--muted)}
+
+/* ============ venue ticket ============ */
+.S .ticket{filter:drop-shadow(2px 0 0 #111) drop-shadow(-2px 0 0 #111) drop-shadow(0 2px 0 #111) drop-shadow(0 -2px 0 #111) drop-shadow(6px 6px 0 #111)}
+.S .stub{background:radial-gradient(circle,rgba(255,255,255,.25) 1.4px,transparent 1.9px) 0 0/8px 8px,var(--accent);border-right:3px dashed #fff}
+.S .stub b{font:400 52px/1 Bangers,sans-serif;text-shadow:var(--ol),3px 3px 0 #111}
+.S .stub span{font:400 15px/1.1 Bangers,sans-serif;letter-spacing:2px}
+.S .tk-body{background:#fff}
+.S .tk-body small{font:400 14px Bangers,sans-serif;letter-spacing:2px}
+.S .tk-who{font:400 24px/1.1 Bangers,sans-serif;letter-spacing:1px;color:var(--alt)}
+
+/* ============ gallery ============ */
+.S .pola{border:3px solid #111;box-shadow:5px 5px 0 #111}
+.S .pola .ph{border:2px solid #111}
+.S .pola .cap{font:400 20px/1 Bangers,sans-serif;letter-spacing:1px;color:#111}
+.S .pola .cap small{color:var(--muted)}
+
+/* ============ wishes ============ */
+.S form{border-radius:10px;box-shadow:var(--pop),inset 0 8px 0 var(--yel),inset 0 11px 0 #111}
+.S input,.S textarea{border:2px solid #111;border-radius:8px;background:#fff;box-shadow:inset 2px 2px 0 rgba(0,0,0,.07)}
+.S input:focus,.S textarea:focus{border-color:var(--alt);box-shadow:0 0 0 3px var(--yel)}
+/* wishes: comic speech bubbles on a halftone panel, with POW-style bursts */
+.S .wishes{--w0:#e11d2a;--w1:#1d4ed8;--w2:#0f9d58;--w3:#ff8c00}
+.S .board{border-radius:10px;padding:30px 14px 14px;-webkit-backdrop-filter:none;backdrop-filter:none;rotate:-.6deg;
+  background:radial-gradient(circle,rgba(225,29,42,.22) 1.6px,transparent 2.2px) 0 0/10px 10px,var(--yel);
+  border:4px solid #111;box-shadow:8px 8px 0 #111}
+.S .board-head{width:fit-content;margin:-46px auto 22px;padding:8px 16px 6px;background:#fff;border:3px solid #111;box-shadow:4px 4px 0 #111;rotate:-3deg}
+.S .board-title{font:400 26px/1 Bangers,sans-serif;letter-spacing:1.5px;color:var(--accent);text-shadow:2px 2px 0 #111}
+.S .board-title::before,.S .board-title::after{content:"★";color:var(--alt);text-shadow:none}
+.S .board-count{font:400 15px/1 Bangers,sans-serif;letter-spacing:1px;background:var(--alt);color:#fff;border:2px solid #111;border-radius:6px}
+.S .wall{gap:28px}
+.S .wall-note{color:#111;font:400 20px Bangers,sans-serif;letter-spacing:1px}
+.S .wish{border-radius:22px;padding:18px 36px 14px 14px;margin-left:6px}
+/* bubble tail, bottom left */
+.S .wish::after{content:"";position:absolute;left:30px;bottom:-11px;width:18px;height:18px;background:#fff;
+  border-right:3px solid #111;border-bottom:3px solid #111;rotate:45deg;skew:-12deg -12deg}
+.S .w-ava{border:3px solid #111;color:#fff;font:400 22px/1 Bangers,sans-serif;text-shadow:var(--ol);box-shadow:2px 2px 0 #111;
+  background:radial-gradient(circle,rgba(255,255,255,.3) 1.3px,transparent 1.8px) 0 0/6px 6px,var(--wc)}
+.S .wish p{font-weight:600;color:#14161f}
+.S .wish .by b{color:var(--wc);font:400 17px/1 Bangers,sans-serif;letter-spacing:.8px}
+.S .w-body::before{display:none}
+/* burst sticker: emoji replaced by a comic sound word */
+.S .w-stk{--burst:var(--yel);font-size:0;top:-30px;right:-16px;width:64px;height:64px;display:grid;place-items:center;filter:drop-shadow(2px 2px 0 #111)}
+.S .w-stk::before{content:"";position:absolute;inset:0;background:var(--burst);
+  clip-path:polygon(50% 0,61% 22%,85% 8%,78% 34%,100% 42%,80% 58%,94% 82%,66% 76%,58% 100%,44% 80%,20% 96%,22% 70%,0 60%,18% 44%,4% 20%,30% 26%)}
+.S .w-stk::after{content:"WOW!";position:relative;font:400 14px/1 Bangers,sans-serif;letter-spacing:.5px;color:var(--accent);rotate:-10deg}
+.S .wish:nth-child(4n+2) .w-stk{--burst:#fff}
+.S .wish:nth-child(4n+2) .w-stk::after{content:"POW!";color:var(--alt)}
+.S .wish:nth-child(4n+3) .w-stk::after{content:"YAY!"}
+.S .wish:nth-child(4n) .w-stk::after{content:"ZAP!"}
+.S .soon{font:400 22px Bangers,sans-serif;letter-spacing:1px}
+
+/* ============ footer: night city skyline ============ */
+.S .footer{--bg:#0e2a78;color:#fff;padding-bottom:calc(150px + env(safe-area-inset-bottom));overflow:hidden;
+  background:radial-gradient(circle,rgba(255,255,255,.08) 1.4px,transparent 1.9px) 0 0/12px 12px,linear-gradient(#0e2a78,#13389a 70%,#1d4ed8)}
+.S .footer > *:not(.S-sky){position:relative;z-index:1}
+.S .S-sky{position:absolute;left:0;right:0;bottom:0;width:100%;height:130px;z-index:0}
+.S .footer .shloka .deva{color:var(--yel)}
+.S .footer .shloka .tr,.S .footer .credit{color:#d6e2ff}
+.S .footer .gift{font:400 30px/1.15 Bangers,sans-serif;letter-spacing:1.2px;color:var(--yel);text-shadow:var(--ol),4px 4px 0 var(--accent)}
+.S .footer .signoff{color:#fff}
+
+/* ============ dock ============ */
+.S .dock{border-bottom:0;border-radius:16px 16px 0 0;box-shadow:0 -3px 0 rgba(0,0,0,.12)}
+.S .dock a{font:400 14px/1.1 Bangers,sans-serif;letter-spacing:1px}
+.S .dock a:first-child{background:var(--accent);border:2px solid #111}
+
+/* ============ intro envelope ============ */
+.S #intro .bg{background:radial-gradient(circle,rgba(255,255,255,.14) 1.6px,transparent 2.1px) 0 0/14px 14px,
+  repeating-conic-gradient(from 0deg at 50% 55%,#2a5ce2 0 7deg,#1f48c4 7deg 14deg)}
+.S #intro .env-back{background:radial-gradient(circle,#e11d2a 2px,transparent 2.6px) 0 0/14px 14px,var(--yel);border:3px solid #111}
+.S #intro .env-card{background:#fff;border:3px solid #111;outline:2px solid var(--yel);outline-offset:-8px}
+.S #intro .env-card .crown{display:none}
+.S #intro .env-card::before{content:"";display:block;width:20%;aspect-ratio:100/112;margin:0 auto 4px;background:var(--emblem) center/contain no-repeat}
+.S #intro .env-card .t{font-family:Bangers,sans-serif;font-weight:400;letter-spacing:1.5px;color:var(--accent);text-shadow:2px 2px 0 #111}
+.S #intro .env-card .s{color:var(--alt)}
+.S #intro .env-front{background:linear-gradient(to top right,transparent 49.2%,#111 49.6% 50.4%,transparent 50.8%) 0 100%/50% 70% no-repeat,
+  linear-gradient(to top left,transparent 49.2%,#111 49.6% 50.4%,transparent 50.8%) 100% 100%/50% 70% no-repeat,
+  radial-gradient(circle,rgba(255,255,255,.14) 1.5px,transparent 2px) 0 0/10px 10px,linear-gradient(165deg,#2f62f0,#1a3fb8)}
+.S #intro .env-flap{background:linear-gradient(#ff3b3b,#c8141f)}
+.S #intro .env-seal{border-radius:0;font:400 30px/1 Bangers,sans-serif;color:var(--accent);text-shadow:none;box-shadow:none;background:var(--yel);
+  clip-path:polygon(50% 0,61% 26%,90% 15%,76% 42%,100% 55%,72% 63%,79% 93%,52% 76%,27% 96%,29% 66%,0 58%,24% 41%,10% 13%,39% 25%)}
+.S #intro .skip{font:400 15px Bangers,sans-serif;letter-spacing:2px}
+
+/* ============ hover ============ */
+@media (hover:hover){
+  .S .btn:hover{filter:none;transform:translate(-2px,-2px);box-shadow:6px 6px 0 #111}
+  .S .pola:hover{box-shadow:9px 9px 0 #111}
+  .S-months .m{transition:transform .2s ease}
+  .S-months .m:hover{transform:rotate(0deg) scale(1.05);z-index:3}
+}
+
+/* ============ laptop / desktop ============ */
+@media (min-width:900px){
+  .S{--head-size:38px}
+  .S-hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);column-gap:48px;align-items:center;padding:0 56px 10px;
+    background:radial-gradient(circle,rgba(255,255,255,.13) 1.5px,transparent 2px) 0 0/12px 12px,
+      radial-gradient(ellipse at 70% 48%,transparent 30%,rgba(6,18,70,.5) 100%),
+      repeating-conic-gradient(from 0deg at 70% 48%,#2a5ce2 0 5deg,#1f48c4 5deg 10deg)}
+  .S-hero .torans{grid-column:1/-1;margin:0 -56px 22px}
+  .S-hero .h-left{grid-column:1;grid-row:2}
+  .S-hero .h-right{grid-column:2;grid-row:2}
+  .S-hero .bless{max-width:440px;padding:28px 26px 24px}
+  .S-hero .lg{width:160px;height:160px}
+  .S-hero .lg-cap{font-size:16px}
+  .S-hero .shloka .deva{font-size:20px}
+  .S-hero .shloka .tr{font-size:14px}
+  .S-hero .panel{max-width:400px;margin-top:20px}
+  .S .burst b{font-size:28px}
+  .S-hero h1{margin-top:30px}
+  .S-hero .h1v .nm{font-size:104px}
+  .S-hero .h1v .k{font-size:30px}
+  .S-hero .h1v .tn{font-size:40px}
+  .S-hero .tagline{font-size:22px;max-width:420px}
+  .S-hero .meta b{font-size:26px}
+  .S-hero .meta span{font-size:17px}
+
+  .S .ribbon{margin-inline:-20px}
+  .S .rb-track span{font-size:21px}
+
+  .S-months{padding:64px 48px 64px}
+  .S-months h2{font-size:calc(var(--head-size) * 1.25)}
+  .S-months .sub{font-size:16px;margin-bottom:34px}
+  .S-months .strip{grid-template-columns:repeat(6,minmax(0,1fr));gap:40px 22px;max-width:1000px}
+  .S-months .cap{font-size:16px}
+  .S-months .tag{font-size:15px}
+  .S-months .big .ph b{font-size:72px}
+  .S .first-year h3{font-size:32px}
+  .S .stat b{font-size:38px}
+
+  .S .cd-u{width:110px}
+  .S .cd-u b{font-size:54px}
+  .S .cd-u span{font-size:16px}
+  .S .hosts .star{font-size:58px}
+  .S .hosts .star::before{width:56px}
+  .S .footer .gift{font-size:38px}
+  .S .footer{padding-bottom:180px}
+  .S .S-sky{height:160px}
+  .S .dock{border-bottom:3px solid #111;border-radius:16px;box-shadow:var(--pop)}
+}

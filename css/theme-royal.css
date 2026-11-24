@@ -1,0 +1,223 @@
+/* ============ THEME R: Royal Prince ============ */
+/* Ivory damask page, navy velvet hero + portrait hall, gold trim, ruby accents. */
+.R{
+  --navy:#1d1b4f;--navy-2:#2a2f7a;--navy-3:#3b3590;--ruby:#a3123a;--gold:#d4a537;--gold-l:#f6dc8a;--gold-d:#8a6212;--ivory:#fffaf0;
+  --gold-ring:conic-gradient(from 20deg,#f6dc8a,#b8860b,#fff1b8,#a87b12,#f6dc8a,#c99a2e,#fff1b8,#b8860b,#f6dc8a);
+  --head:"Cinzel Decorative","Cinzel",Georgia,serif;--head-w:700;--head-size:27px;
+  --accent:var(--ruby);--alt:var(--navy-2);--h2:var(--navy);--muted:#5d5470;--ink:#241f3a;
+  --page-bg:#fbf5e6;
+  --party-bg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 6L58 32 32 58 6 32Z' fill='none' stroke='%23d4a537' stroke-opacity='.22'/%3E%3Cpath d='M32 22q5 10 0 20q-5-10 0-20zM22 32q10-5 20 0q-10 5-20 0z' fill='%23d4a537' fill-opacity='.18'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%23d4a537' fill-opacity='.3'/%3E%3Ccircle cx='64' cy='0' r='2' fill='%23d4a537' fill-opacity='.3'/%3E%3Ccircle cx='0' cy='64' r='2' fill='%23d4a537' fill-opacity='.3'/%3E%3Ccircle cx='64' cy='64' r='2' fill='%23d4a537' fill-opacity='.3'/%3E%3C/svg%3E") 0 0/64px 64px,
+    linear-gradient(175deg,#fffaf0 0%,#fbf1dc 45%,#f6ead2 100%);
+  --glass-bg:linear-gradient(140deg,rgba(255,252,244,.86),rgba(255,247,228,.6));
+  --glass-shadow:0 10px 28px rgba(60,40,10,.14);
+}
+.R .party-bg .cf{display:none}
+.R .party-bg .orb{background:radial-gradient(circle,rgba(212,165,55,.16),transparent 66%)}
+/* party balloons, gilded */
+.R .party-bg .fb,.R #intro .ib{filter:sepia(1) saturate(2.4) hue-rotate(-8deg) brightness(1.05)}
+.R .party-bg .fb{opacity:.35}
+
+/* gold-ring helper look */
+.R-hero .ring,.R-months .fr{background:var(--gold-ring);box-shadow:0 0 0 2px var(--gold-d),0 10px 24px rgba(0,0,0,.4)}
+
+/* ---------- hero ---------- */
+.R-hero{position:relative;overflow:hidden;color:#f3ecff;padding:0 18px 4px;
+  background:radial-gradient(ellipse 90% 60% at 50% 38%,#3b3590 0%,#25226a 45%,#16143e 100%)}
+.R-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,#8a6212,#f6dc8a,#b8860b,#f6dc8a,#8a6212)}
+.R-hero .torans{margin:0 -18px 10px}
+/* velvet drapes swept to the corners, gold fringe on the curve */
+.R-hero .drape{position:absolute;top:0;width:30%;height:190px;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(90deg,#7a0c28 0 5px,#b3163f 9px,#7a0c28 14px);box-shadow:0 8px 18px rgba(0,0,0,.35)}
+.R-hero .drape.l{left:0;border-bottom-right-radius:100% 100%;border-right:5px solid var(--gold);border-bottom:5px solid var(--gold)}
+.R-hero .drape.r{right:0;border-bottom-left-radius:100% 100%;border-left:5px solid var(--gold);border-bottom:5px solid var(--gold)}
+.R-hero .h-left,.R-hero .h-right{position:relative;z-index:2}
+.R-hero .blessing{color:var(--gold-l)}
+.R-hero .shloka .deva{color:var(--gold-l)}
+.R-hero .shloka .tr{color:#cfc8ec}
+.R-hero .lg{width:128px;height:128px;margin:12px auto 0;border-radius:50%;overflow:hidden;border:4px solid var(--ivory);box-shadow:0 0 0 4px var(--gold),0 8px 20px rgba(0,0,0,.4)}
+.R-hero .lg-cap{text-align:center;font:600 14px Fredoka;color:var(--gold-l);margin-top:8px}
+.R-hero .herald{margin:28px 0 0;text-align:center;font:700 12px Cinzel,serif;letter-spacing:4px;text-transform:uppercase;color:var(--gold-l)}
+.R-hero .herald::before,.R-hero .herald::after{content:"❖";margin:0 10px;color:var(--gold)}
+.R-hero .frame{position:relative;isolation:isolate;width:min(72%,300px);margin:clamp(64px,20vw,84px) auto 0}
+/* soft gold rays behind the portrait */
+.R-hero .frame::before{content:"";position:absolute;inset:-22%;border-radius:50%;z-index:-1;animation:spin 80s linear infinite;
+  background:repeating-conic-gradient(rgba(246,220,138,.2) 0 5deg,transparent 5deg 15deg);
+  -webkit-mask:radial-gradient(closest-side,#000 40%,transparent);mask:radial-gradient(closest-side,#000 40%,transparent)}
+.R-hero .ring{position:relative;aspect-ratio:4/5;border-radius:50%;padding:11px}
+/* pearl beading just outside the gold */
+.R-hero .ring::before{content:"";position:absolute;inset:-9px;border-radius:50%;pointer-events:none;
+  background:repeating-conic-gradient(#fff6dc 0 2.2deg,transparent 2.2deg 6deg);
+  -webkit-mask:radial-gradient(closest-side,transparent 94%,#000 95%);mask:radial-gradient(closest-side,transparent 94%,#000 95%)}
+.R-hero .portrait{width:100%;height:100%;border-radius:50%;overflow:hidden;box-shadow:inset 0 0 0 3px var(--gold-d)}
+.R-hero .frame .crown{position:absolute;left:50%;top:-17%;width:40%;z-index:3;transform:translateX(-50%);
+  filter:drop-shadow(0 4px 4px rgba(0,0,0,.4));animation:crownbob 2.6s ease-in-out infinite}
+.R-hero .plaque,.R-months figcaption b{background:linear-gradient(#fff1b8,#d4a537 55%,#b8860b);color:#3a2300;
+  box-shadow:0 0 0 1px var(--gold-d),0 4px 10px rgba(0,0,0,.35);border-radius:4px}
+.R-hero .plaque{position:relative;z-index:3;width:fit-content;margin:-18px auto 0;padding:7px 18px;font:700 12px Cinzel,serif;letter-spacing:2.5px;text-transform:uppercase}
+.R-hero h1{margin:26px 0 6px;text-align:center;font-weight:400}
+.R-hero .h1v{display:block}
+.R-hero .h1v small{display:block;font:500 14px Cinzel,serif;letter-spacing:5px;text-transform:uppercase;color:#e3dbff}
+.R-hero .h1v .nm{display:block;margin:4px 0 2px;font:900 clamp(40px,13vw,58px)/1.05 "Cinzel Decorative",Georgia,serif;
+  background:linear-gradient(100deg,#b8860b 0%,#fff1b8 30%,#d4a537 50%,#fff6d0 70%,#b8860b 100%) 0 0/200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 6s ease-in-out infinite alternate;
+  filter:drop-shadow(0 3px 0 rgba(0,0,0,.35))}
+.R-hero .h1v em{display:block;font:italic 500 20px Cinzel,serif;letter-spacing:2px;color:#f3ecff}
+.R-hero .tagline{margin:10px 0 0;text-align:center;font:700 24px/1.15 Caveat,cursive;color:var(--gold-l);text-wrap:balance}
+/* parchment scroll with rolled ends */
+.R-hero .decree{position:relative;max-width:320px;margin:20px auto 0;padding:13px 22px;text-align:center;border-radius:4px;
+  background:linear-gradient(#fffaf0,#f1deb0);color:#3a2300;font:400 15px/1.55 Fredoka;box-shadow:0 10px 22px rgba(0,0,0,.35)}
+.R-hero .decree b{font:700 16px Cinzel,serif;letter-spacing:.5px}
+.R-hero .decree::before,.R-hero .decree::after{content:"";position:absolute;top:-5px;bottom:-5px;width:13px;border-radius:7px;
+  background:linear-gradient(90deg,#b8860b,#fff1b8 45%,#a87b12)}
+.R-hero .decree::before{left:-7px}.R-hero .decree::after{right:-7px}
+.R-hero .scroll-cue{color:var(--gold-l);padding-top:16px}
+
+/* ---------- months: royal portrait hall ---------- */
+.R-months{position:relative;padding:40px 16px 46px;color:#f3ecff;text-align:center;
+  background:radial-gradient(ellipse at 50% 0,#3b3590,#1d1b4f 60%,#14123a)}
+.R-months::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,#8a6212,#f6dc8a,#b8860b,#f6dc8a,#8a6212)}
+.R-months .eyebrow{color:var(--gold-l);margin-bottom:6px}
+.R-months h2{margin:0;font:700 30px/1.1 "Cinzel Decorative",Georgia,serif;color:var(--gold-l);text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.R-months h2::after{content:"";display:block;width:132px;height:14px;margin:10px auto 0;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 14'%3E%3Cpath d='M2 7h46M84 7h46' stroke='%23f6dc8a' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M66 0l6 7-6 7-6-7z' fill='%23f6dc8a'/%3E%3Ccircle cx='54' cy='7' r='2.4' fill='%23ff5a7e'/%3E%3Ccircle cx='78' cy='7' r='2.4' fill='%23ff5a7e'/%3E%3C/svg%3E") center/contain no-repeat}
+.R-months .sub{color:#cfc8ec;font-size:14px;margin:8px 0 24px}
+.R-months .hall{display:grid;grid-template-columns:repeat(3,1fr);gap:24px 12px}
+.R-months .rp{margin:0}
+.R-months .fr{aspect-ratio:4/5;border-radius:50%;padding:5px}
+.R-months .ph{width:100%;height:100%;border-radius:50%;overflow:hidden;background:var(--navy-2)}
+.R-months figcaption b{display:inline-block;margin-top:9px;padding:3px 9px;font:700 12px Cinzel,serif;letter-spacing:.5px}
+.R-months figcaption small{display:block;margin-top:4px;font:400 12px Fredoka;color:#cfc8ec}
+.R-months figcaption .tag{display:block;margin-top:3px;font:700 16px/1.05 Caveat,cursive;color:#ffc2d1}
+.R-months .big .ph{position:relative;display:grid;place-items:center;background:radial-gradient(circle at 40% 35%,#d4204f,#7a0c28)}
+.R-months .big .ph b{font:700 50px/1 Cinzel,Georgia,serif;color:var(--gold-l);text-shadow:0 3px 0 #4a0616;margin-top:18%}
+.R-months .big .ph .crown{position:absolute;top:14%;left:50%;width:40%;transform:translateX(-50%)}
+.R-months .first-year h3{color:var(--gold-l);font:700 19px/1.2 Cinzel,serif;letter-spacing:.5px}
+.R-months .stat{background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(246,220,138,.45);border-bottom:3px solid var(--gold);-webkit-backdrop-filter:none;backdrop-filter:none}
+.R-months .stat::before{display:none}
+.R-months .stat b{color:var(--gold-l);font-family:Cinzel,serif}
+.R-months .stat small{color:#cfc8ec}
+
+/* ---------- shared sections, royal dress ---------- */
+/* gold-trimmed velvet valance with tassels instead of bunting */
+.R .sec:not(.footer)::before{height:40px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18));
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 40'%3E%3Cpath d='M0 0H80V12Q60 30 40 12Q20 30 0 12Z' fill='%232a2f7a'/%3E%3Cpath d='M0 12Q20 30 40 12Q60 30 80 12' fill='none' stroke='%23d4a537' stroke-width='2.4'/%3E%3Cpath d='M40 12V26' stroke='%23d4a537' stroke-width='1.4'/%3E%3Cpath d='M36 34Q40 22 44 34Z' fill='%23d4a537'/%3E%3Ccircle cx='40' cy='25' r='2.4' fill='%23a3123a'/%3E%3C/svg%3E") 0 0/80px 40px repeat-x}
+.R .sec:nth-of-type(even)::before{background-position-x:40px}
+.R .sec h2{font-size:var(--head-size);letter-spacing:.5px}
+.R .eyebrow{font-family:Cinzel,serif;font-weight:700;letter-spacing:3.5px}
+.R .eyebrow::before,.R .eyebrow::after{content:"❖";color:var(--gold)}
+
+.R .ribbon:not(.rev){background:linear-gradient(#2a2f7a,#1d1b4f);color:var(--gold-l);border-block:2px solid var(--gold)}
+.R .ribbon.rev{background:linear-gradient(#b3163f,#8a0d2e);color:#fff3d6;border-block:2px solid var(--gold)}
+.R .rb-track span{font-family:Cinzel,serif;font-weight:700;letter-spacing:1.5px}
+.R .rb-track span::after,.R .ribbon.rev .rb-track span::after{content:"♛";color:var(--gold)}
+
+.R .btn{background:linear-gradient(#c2184b,#8a0d2e);border:2px solid var(--gold);box-shadow:0 4px 0 #5e0820;font-family:Cinzel,serif;font-weight:700;letter-spacing:.5px}
+.R .btn.alt{background:linear-gradient(#3b3590,#1d1b4f);box-shadow:0 4px 0 #0e0c2a}
+.R .footer .btn.wa{background:#fff;color:#128c3e;border-color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+
+/* countdown: gold-rimmed velvet medallions */
+.R .cd{gap:12px}
+.R .cd-u{width:clamp(56px,16vw,78px);aspect-ratio:1;padding:0;border-radius:50%;display:grid;place-content:center;
+  background:radial-gradient(circle at 35% 30%,#3b3590,#1d1b4f 72%);
+  box-shadow:0 0 0 3px var(--gold),0 0 0 5px var(--ivory),0 0 0 7px var(--gold),0 10px 20px rgba(30,20,70,.3)}
+.R .cd-u::after{display:none}
+.R .cd-u::before{left:20%;right:20%;top:6%;height:30%;border-radius:50%;background:linear-gradient(rgba(255,255,255,.22),transparent)}
+.R .cd-u b{color:var(--gold-l);font:700 clamp(22px,6.4vw,30px)/1 Cinzel,serif}
+.R .cd-u span{color:#e3dbff;font-size:10px;letter-spacing:1.5px}
+.R .cd-done{font-family:"Cinzel Decorative",serif}
+.R .yr-bar i{background:repeating-linear-gradient(-45deg,var(--gold) 0 8px,var(--gold-l) 8px 16px) 0 0/22.6px 100%}
+.R .yr-cake{filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+
+/* invitation: ivory card stock */
+.R .invite-card{background:linear-gradient(150deg,rgba(255,253,246,.96),rgba(251,240,212,.9))}
+.R .hosts .lead{color:var(--gold-d)}
+.R .hosts-names{font:700 20px/1.35 Cinzel,serif;color:var(--navy)}
+.R .hosts .star{font-family:"Cinzel Decorative",serif;font-size:38px}
+.R .fam{border-top-color:var(--navy-2)}
+
+.R .timeline .ic{background:var(--ivory)}
+.R .timeline time{font-family:Cinzel,serif}
+.R .timeline b{font-family:Cinzel,serif;font-weight:700;font-size:17px;color:var(--navy)}
+.R .stub{background:linear-gradient(160deg,#3b3590,#1d1b4f);border-right-color:rgba(246,220,138,.8)}
+.R .stub b{color:var(--gold-l);font-family:"Cinzel Decorative",serif}
+.R .tk-who{font-family:Cinzel,serif;color:var(--navy)}
+
+/* gallery: gilt-edged prints with a gold corner tab */
+.R .pola{background:var(--ivory);box-shadow:inset 0 0 0 1px rgba(212,165,55,.7),0 6px 14px rgba(60,40,10,.18)}
+.R .pola .tape{width:40px;height:14px;opacity:1;background:linear-gradient(#fff1b8,#d4a537 60%,#b8860b);clip-path:polygon(0 0,100% 0,88% 50%,100% 100%,0 100%,12% 50%)}
+.R .pola .cap{color:var(--navy)}
+
+.R #wish-form{border-top-color:var(--navy-2)}
+
+/* wishes: ivory scrolls with gold rules on a navy velvet board, ruby wax-seal initials */
+.R .wishes{--w0:#a3123a;--w1:#2a2f7a;--w2:#8a6212;--w3:#6b1d6e}
+.R .board{border-radius:14px;padding:30px 16px 16px;-webkit-backdrop-filter:none;backdrop-filter:none;
+  background:radial-gradient(circle,rgba(246,220,138,.14) 1.2px,transparent 1.8px) 0 0/16px 16px,linear-gradient(165deg,#2a2f7a,#1d1b4f 60%,#14123a);
+  box-shadow:inset 0 0 0 2px #d4a537,inset 0 0 0 7px #1d1b4f,inset 0 0 0 8px rgba(246,220,138,.7),0 16px 34px rgba(29,27,79,.35)}
+.R .board::before,.R .board::after{content:"❦";position:absolute;top:10px;font-size:20px;color:var(--gold-l);opacity:.9}
+.R .board::before{left:16px;rotate:180deg}.R .board::after{right:16px}
+.R .board-title{font:700 22px/1.1 "Cinzel Decorative",serif;color:var(--gold-l);text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.R .board-title::before,.R .board-title::after{content:"♛";color:var(--gold)}
+.R .board-count{background:linear-gradient(#f6dc8a,#d4a537);color:var(--navy);font-family:Cinzel,serif;font-weight:700}
+.R .wall-note{color:#cfc8ec}
+.R .wish{rotate:0deg;border-radius:4px;padding:18px 18px 16px 16px;
+  background:linear-gradient(160deg,#fffdf6,#fbf0d6);
+  box-shadow:inset 0 0 0 1px #d4a537,inset 0 0 0 5px #fffaf0,inset 0 0 0 6px rgba(212,165,55,.55),0 8px 18px rgba(0,0,0,.3)}
+.R .w-ava{width:44px;height:44px;border-radius:46% 54% 50% 50%/52% 48% 52% 48%;font:700 19px/1 Cinzel,serif;color:#f6dc8a;text-shadow:0 1px 0 rgba(0,0,0,.4);
+  background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.3),transparent 40%),radial-gradient(circle,transparent 52%,rgba(0,0,0,.22) 54%,transparent 64%),var(--wc);
+  box-shadow:0 3px 6px rgba(0,0,0,.3),inset 0 -3px 4px rgba(0,0,0,.25)}
+.R .wish p{font-size:16px;color:var(--ink)}
+.R .wish .by b{font-family:Cinzel,serif;color:var(--navy)}
+.R .w-body::before{display:none}
+.R .w-stk{font-size:0;top:-11px;right:12px;rotate:0deg;animation:none}
+.R .w-stk::before{content:"♛";font-size:22px;color:var(--gold);text-shadow:0 1px 0 var(--gold-d),0 2px 3px rgba(0,0,0,.3)}
+
+/* footer: night-blue velvet, crown in place of balloons */
+.R .footer{--bg:#1d1b4f;background:linear-gradient(#1d1b4f,#14123a);color:var(--gold-l)}
+.R .f-balloons .crown{width:84px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4));animation:crownbob 2.6s ease-in-out infinite}
+.R .footer .shloka .deva{color:var(--gold-l)}
+.R .footer .shloka .tr,.R .footer .credit{color:#cfc8ec}
+.R .footer .gift{color:var(--gold-l);font-family:"Cinzel Decorative",serif}
+.R .footer .signoff{color:#fff3d6}
+
+/* intro envelope: navy with gold, ruby wax seal */
+.R #intro .env-back{background:radial-gradient(circle,#d4a537 1.6px,transparent 2.2px) 0 0/14px 14px,#1d1b4f}
+.R #intro .env-front{background:linear-gradient(to top right,transparent 49.4%,rgba(246,220,138,.45) 50%,transparent 50.6%) 0 100%/50% 70% no-repeat,
+  linear-gradient(to top left,transparent 49.4%,rgba(246,220,138,.45) 50%,transparent 50.6%) 100% 100%/50% 70% no-repeat,linear-gradient(165deg,#3b3590,#1d1b4f)}
+.R #intro .env-flap{background:linear-gradient(#2a2f7a,#1d1b4f);box-shadow:inset 0 0 0 2px #d4a537}
+.R #intro .env-card{background:linear-gradient(#fffdf6,#f6e7bf);border-color:var(--gold)}
+.R #intro .env-card .t{font-family:"Cinzel Decorative",serif;color:var(--navy);font-size:clamp(19px,6.2vw,28px)}
+.R #intro .env-card .s{color:var(--ruby)}
+
+@media (hover:hover){
+  .R-months .fr{transition:transform .25s ease}
+  .R-months .rp:hover .fr{transform:scale(1.06)}
+}
+
+@media (min-width:900px){
+  .R{--head-size:30px}
+  .R-hero{display:grid;grid-template-columns:1fr 1fr;align-items:center;column-gap:40px;padding:0 48px 10px}
+  .R-hero .torans{grid-column:1/-1;margin:0 -48px 10px}
+  .R-hero .drape{width:22%;height:260px}
+  .R-hero .h-left{padding-top:40px}
+  .R-hero .lg{width:170px;height:170px}
+  .R-hero .shloka .deva{font-size:20px}
+  .R-hero .shloka .tr{font-size:14px}
+  .R-hero .frame{width:300px}
+  .R-hero .h1v .nm{font-size:66px}
+  .R-hero .tagline{font-size:30px}
+  .R-hero .decree{max-width:380px;font-size:16px}
+  .R-months{padding:60px 48px 64px}
+  .R-months h2{font-size:44px}
+  .R-months .sub{font-size:16px;margin-bottom:32px}
+  .R-months .hall{grid-template-columns:repeat(6,1fr);gap:34px 22px;max-width:1000px;margin:0 auto}
+  .R-months figcaption b{font-size:13px}
+  .R-months .first-year h3{font-size:24px}
+  .R .cd{gap:26px}
+  .R .cd-u{width:112px}
+  .R .cd-u b{font-size:42px}
+  .R .cd-u span{font-size:12px}
+  .R .hosts-names{font-size:24px}
+  .R .hosts .star{font-size:50px}
+  .R #intro .env-card .t{font-size:36px}
+}

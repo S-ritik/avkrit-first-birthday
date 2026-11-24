@@ -4,6 +4,11 @@
 const CONTENT = {
   siteUrl: 'https://s-ritik.github.io/avkrit-first-birthday/',
 
+  // Look of the Invite: 'A' Balloon Arch, 'C' Storybook Polaroid, 'R' Royal Prince, 'S' Superhero.
+  // ?theme=R in the link overrides it. themePicker: true shows the 🎨 switcher; set false before sending.
+  theme: 'A',
+  themePicker: true,
+
   // Paste the Apps Script web app URL (ends in /exec) after deploying backend/Code.gs.
   // Empty = Wishes show "opening soon".
   backendUrl: 'https://script.google.com/macros/s/AKfycbyoJDAQeqYuSiOZk7BgDEmfgQA974RHop825EuOqFbBQz2eFrjXTsL9y32epH6lkdyl/exec',
@@ -93,9 +98,46 @@ const CONTENT = {
 
   venue: { name: 'Evergreen Compound', mapUrl: 'https://maps.app.goo.gl/F8G3ykAbDrE7Ar128' },
 
+  // Text sent by the "Share on WhatsApp" button. *word* is bold in WhatsApp.
+  // Order: title, Invite link, Hindi, English, wishes reminder, map link.
+  // The Invite link goes first because WhatsApp builds its preview card from the first link.
+  shareText: {
+    title: '🎈🎂 *Avkrit\'s 1st Birthday* 🎂🎈',
+    hi: [
+      '🙏 *‖ श्री गणेशाय नमः ‖* 🙏',
+      '',
+      '💐 आप सपरिवार सादर आमंत्रित हैं 💐',
+      'हमारे लाडले 👑 *अवकृत* 👑 का *पहला जन्मदिन* है 🥳',
+      '',
+      '📅 शुक्रवार, 4 दिसंबर 2026',
+      '⏰ शाम 6:30 बजे से',
+      '📍 एवरग्रीन कंपाउंड',
+      '🎂 केक कटिंग: शाम 7:00 बजे',
+      '🍽️ भोजन: रात 8:00 बजे',
+      '',
+      'आपकी उपस्थिति और आशीर्वाद की प्रतीक्षा रहेगी 🙏',
+    ],
+    en: [
+      '💐 You and your family are warmly invited 💐',
+      'to celebrate 👑 *Avkrit\'s 1st birthday* 👑 🥳',
+      '',
+      '📅 Friday, 4 December 2026',
+      '⏰ 6:30 PM onwards',
+      '📍 Evergreen Compound',
+      '🎂 Cake cutting: 7:00 PM',
+      '🍽️ Dinner: 8:00 PM',
+      '',
+      'Please come and bless our little prince 🙏',
+    ],
+    wishReminder: [
+      '💌 इनवाइट पेज के सबसे नीचे अवकृत के लिए अपनी शुभकामना ज़रूर लिखें!',
+      '💌 Don\'t forget to leave a wish for Avkrit at the bottom of the invite page!',
+    ],
+  },
+
   longLife: {
     shloka: 'पश्येम शरदः शतं जीवेम शरदः शतम्',
-    source: '',
+    source: '||',
     translation: 'May we see a hundred autumns; may we live a hundred autumns.',
   },
   footer: {

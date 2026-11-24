@@ -1,4 +1,15 @@
 // Section render functions. Each returns HTML; variant styling lives in css/style.css under .A / .C.
+// Extra themes (R, S) add their HERO / MONTHS_SEC entries and CSS from js/theme-*.js and css/theme-*.css.
+
+// Every theme the picker offers. A theme shows only once its HERO and MONTHS_SEC entries exist.
+const THEMES = {
+  A: { name: 'Balloon Arch', icon: '🎈' },
+  C: { name: 'Storybook Polaroid', icon: '📸' },
+  R: { name: 'Royal Prince', icon: '👑' },
+  S: { name: 'Superhero', icon: '🦸' },
+};
+// Optional per-theme setup run after render (e.g. build decorations sized to the screen).
+const THEME_INIT = {};
 
 /* ---------- tiny SVG kit (from the prototype) ---------- */
 const CROWN = `<svg class="crown" viewBox="0 0 64 46" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -319,8 +330,11 @@ const wishesSec = () => `
       <p class="msg" role="status"></p>
     </form>
     <p class="soon" hidden>The Wishes Wall opens soon.</p>
-    <ul class="wall" aria-live="polite"></ul>
-    <p class="wall-note"></p>
+    <div class="board">
+      <div class="board-head"><span class="board-title">Wishes Wall</span><b class="board-count"></b></div>
+      <ul class="wall" aria-live="polite"></ul>
+      <p class="wall-note"></p>
+    </div>
   </section>`;
 
 const footerSec = () => `
