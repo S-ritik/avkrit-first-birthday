@@ -167,9 +167,13 @@ img{max-width:100%}
 .venue .btns{display:flex;flex-direction:column;gap:12px;max-width:320px;margin:0 auto}
 
 /* gallery: scattered polaroids */
-.polas{columns:2;column-gap:14px;padding-top:10px}
-@media (min-width:480px){.polas{columns:3}}
-.pola{display:block;width:100%;break-inside:avoid;margin:0 0 16px;padding:6px 6px 22px;border:0;background:#fff;cursor:zoom-in;
+/* grid, not CSS columns: photos read left to right, row by row (chronological).
+   .masonry (set by initGalleryMasonry) packs cards into 2px rows so short ones don't leave gaps. */
+.polas{--pg:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--pg) 14px;align-items:start;padding-top:10px}
+.polas.masonry{grid-auto-rows:2px;row-gap:0}
+.polas.masonry .pola{margin-bottom:var(--pg)}
+@media (min-width:480px){.polas{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pola{display:block;width:100%;break-inside:avoid;margin:0;padding:6px 6px 22px;border:0;background:#fff;cursor:zoom-in;
   box-shadow:0 6px 14px rgba(0,0,0,.16);transform:translateY(var(--y)) rotate(var(--r))}
 .pola{position:relative}
 .pola:has(.cap){padding-bottom:10px}
@@ -637,8 +641,7 @@ form .btn{justify-self:center;min-width:200px}
   .venue .btns .btn{min-width:230px}
 
   /* gallery */
-  .polas{columns:4;column-gap:24px}
-  .pola{margin-bottom:24px}
+  .polas{--pg:24px;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:24px}
 
   /* forms + wishes */
   form{max-width:540px;padding:30px 34px}

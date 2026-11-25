@@ -24,6 +24,7 @@ function boot() {
   startCountdown();
   initWishes();
   initLightbox();
+  initGalleryMasonry();
   initDock();
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) initReveal();
 }
@@ -268,6 +269,20 @@ function initWishes() {
       say(form, errorText(res.err), 'err');
     }
   });
+}
+
+/* ---------- gallery: keep left-to-right order, but let each card span rows by its height (no gaps) ---------- */
+function initGalleryMasonry() {
+  const grid = $('.polas');
+  if (!grid || !('ResizeObserver' in window)) return; // falls back to a plain row grid
+  grid.classList.add('masonry');
+  const ROW = 2;
+  const fit = (el) => {
+    const gap = parseFloat(getComputedStyle(el).marginBottom) || 0;
+    el.style.gridRowEnd = `span ${Math.ceil((el.offsetHeight + gap) / ROW)}`; // offsetHeight ignores tilt/hover transforms
+  };
+  const ro = new ResizeObserver((entries) => entries.forEach((e) => fit(e.target)));
+  grid.querySelectorAll('.pola').forEach((el) => ro.observe(el));
 }
 
 /* ---------- lightbox: tap any [data-zoom] photo; ‹ › / arrows / swipe browse its group; close on tap, Esc or back ---------- */

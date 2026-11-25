@@ -172,7 +172,7 @@ test('countdown counts to 4 Dec 6:30 pm IST', async ({ page }) => {
 });
 
 test('at party start: "Avkrit is 1!" live; Wishes stay open', async ({ page }) => {
-  await open(page, { time: new Date(PARTY.getTime() - 2000) });
+  await open(page, { time: new Date(PARTY.getTime() - 2000), frozen: true });
   await expect(page.locator('[data-cd]')).toBeVisible();
   await page.clock.runFor(3000);
   await expect(page.locator('.cd-done')).toHaveText('Avkrit is 1! 🎉');
