@@ -158,8 +158,9 @@
 .R .board::before{left:16px;rotate:180deg}.R .board::after{right:16px}
 .R .board-title{font:700 22px/1.1 "Cinzel Decorative",serif;color:var(--gold-l);text-shadow:0 2px 0 rgba(0,0,0,.35)}
 .R .board-title::before,.R .board-title::after{content:"♛";color:var(--gold)}
-.R .board-count{background:linear-gradient(#f6dc8a,#d4a537);color:var(--navy);font-family:Cinzel,serif;font-weight:700}
 .R .wall-note{color:#cfc8ec}
+.R .pager button{background:linear-gradient(#f6dc8a,#d4a537);color:var(--navy);font-family:Cinzel,serif;font-weight:700}
+.R .pg-info{color:#cfc8ec}
 .R .wish{rotate:0deg;border-radius:4px;padding:18px 18px 16px 16px;
   background:linear-gradient(160deg,#fffdf6,#fbf0d6);
   box-shadow:inset 0 0 0 1px #d4a537,inset 0 0 0 5px #fffaf0,inset 0 0 0 6px rgba(212,165,55,.55),0 8px 18px rgba(0,0,0,.3)}

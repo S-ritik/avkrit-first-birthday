@@ -94,31 +94,31 @@ function playIntro() {
   el.addEventListener('pointerdown', done, { once: true });
 }
 
-/* ---------- music: autoplay, else first tap/key; no controls ---------- */
+/* ---------- music: autoplay, else first tap/key/scroll; no controls ----------
+   Browsers block sound until a user gesture. Most don't count scroll/swipe, and on touch
+   pointerdown/touchstart don't count yet (touchend/click/pointerup do). So try on every one
+   and keep listening until play() actually succeeds. play() flips paused at once, so no pile-up. */
 function startMusic() {
   const audio = new Audio();
   audio.loop = !!CONTENT.music.loop;
   audio.preload = 'auto';
-  let broken = false, wanted = true;
-  audio.addEventListener('error', () => { broken = true; });
+  let broken = false;
+  audio.addEventListener('error', () => { broken = true; disarm(); });
   audio.src = CONTENT.music.src;
 
-  const gestures = ['pointerdown', 'keydown', 'touchstart'];
-  const onGesture = () => { gestures.forEach((g) => removeEventListener(g, onGesture, true)); tryPlay(false); };
-  function tryPlay(armOnBlock) {
-    if (broken || document.hidden) return;
+  const gestures = ['pointerdown', 'pointerup', 'touchstart', 'touchmove', 'touchend', 'click', 'keydown', 'wheel', 'scroll'];
+  const onGesture = () => tryPlay();
+  const arm = () => gestures.forEach((g) => addEventListener(g, onGesture, { capture: true, passive: true }));
+  function disarm() { gestures.forEach((g) => removeEventListener(g, onGesture, { capture: true })); }
+  function tryPlay() {
+    if (broken || document.hidden || !audio.paused) return;
     const p = audio.play();
-    if (p && p.catch) {
-      p.catch((e) => {
-        if (armOnBlock && e && e.name === 'NotAllowedError') gestures.forEach((g) => addEventListener(g, onGesture, true));
-      });
-    }
+    if (p && p.then) p.then(disarm, () => {}); // blocked: listeners stay armed for the next gesture
+    else disarm();
   }
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { wanted = !audio.paused; audio.pause(); }
-    else if (wanted && audio.currentTime > 0) tryPlay(false);
-  });
-  tryPlay(true);
+  document.addEventListener('visibilitychange', () => (document.hidden ? audio.pause() : tryPlay()));
+  arm();
+  tryPlay();
 }
 
 /* ---------- countdown ---------- */
@@ -201,12 +201,29 @@ function initWishes() {
   const form = $('#wish-form', sec);
   const wall = $('.wall', sec);
   const note = $('.wall-note', sec);
-  const countEl = $('.board-count', sec);
-  const setCount = () => {
-    const n = wall.children.length;
-    countEl.textContent = n ? `${n} ${n === 1 ? 'wish' : 'wishes'}` : '';
+  const board = $('.board', sec);
+  if (!backendReady()) { form.hidden = true; board.hidden = true; $('.soon', sec).hidden = false; return; }
+
+  // Pagination: all cards live in `cards` (newest first); the wall shows one page of them.
+  const PER_PAGE = 5;
+  const pager = $('.pager', sec), prev = $('.pg-prev', pager), next = $('.pg-next', pager), info = $('.pg-info', pager);
+  let cards = [], page = 0;
+  const render = () => {
+    const pages = Math.max(1, Math.ceil(cards.length / PER_PAGE));
+    page = Math.min(Math.max(page, 0), pages - 1);
+    wall.replaceChildren(...cards.slice(page * PER_PAGE, (page + 1) * PER_PAGE));
+    pager.hidden = pages < 2;
+    info.textContent = `Page ${page + 1} of ${pages}`;
+    prev.disabled = page === 0;
+    next.disabled = page === pages - 1;
   };
-  if (!backendReady()) { form.hidden = true; $('.board', sec).hidden = true; $('.soon', sec).hidden = false; return; }
+  const turn = (d) => {
+    page += d;
+    render();
+    if (board.getBoundingClientRect().top < 0) board.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  };
+  prev.addEventListener('click', () => turn(-1));
+  next.addEventListener('click', () => turn(1));
 
   const msg = form.elements.message;
   const count = $('.count', form);
@@ -215,10 +232,9 @@ function initWishes() {
   note.textContent = 'Loading wishes…';
   apiGetWishes().then((res) => {
     if (!res || !res.ok) { note.textContent = "Couldn't load wishes right now."; return; }
-    const pending = [...wall.children];
-    wall.replaceChildren(...pending, ...res.wishes.map((w) => wishCard(w)));
-    note.textContent = wall.children.length ? '' : 'Be the first to leave a wish 💌';
-    setCount();
+    cards = [...cards, ...res.wishes.map((w) => wishCard(w))]; // keep wishes sent while loading on top
+    render();
+    note.textContent = cards.length ? '' : 'Be the first to leave a wish 💌';
   });
 
   form.addEventListener('submit', async (e) => {
@@ -230,7 +246,9 @@ function initWishes() {
 
     // Show it on the wall instantly; roll back if the server refuses.
     const card = wishCard({ name, message }, true);
-    wall.prepend(card);
+    cards.unshift(card);
+    page = 0;
+    render();
     note.textContent = '';
     msg.value = '';
     count.textContent = '0 / 500';
@@ -242,9 +260,9 @@ function initWishes() {
       card.classList.remove('pending');
       $('.by span', card).textContent = fmtDate(now());
       say(form, 'Thank you for your wish! 💛', 'ok');
-      setCount();
     } else {
-      card.remove();
+      cards = cards.filter((c) => c !== card);
+      render();
       msg.value = message;
       count.textContent = `${message.length} / 500`;
       say(form, errorText(res.err), 'err');

@@ -29,16 +29,15 @@ async function open(page, { time = BEFORE, backend = true, wishes = [], postResu
   return posts;
 }
 
-test('renders every section in order, noindex, variant A by default', async ({ page }) => {
+test('renders every section in order, noindex, Superhero (S) by default', async ({ page }) => {
   await open(page);
-  await expect(page.locator('body')).toHaveClass(/\bA\b/);
+  await expect(page.locator('body')).toHaveClass(/\bS\b/);
   const ids = await page.locator('#app > section, #app > footer').evaluateAll((els) => els.map((e) => e.id));
   expect(ids).toEqual(['hero', 'months', 'countdown', 'hosts', 'schedule', 'venue', 'gallery', 'wishes', 'footer']);
   await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', /noindex/);
   await expect(page.locator('h1')).toContainText('Our Little Prince Avkrit turns 1');
   await expect(page.locator('#hero')).toContainText('श्री गणेशाय नमः');
   await expect(page.locator('#hero .shloka .tr')).toContainText('remove every obstacle');
-  await expect(page.locator('#arch .b').first()).toBeAttached();
   await expect(page.locator('#hosts')).toContainText('Mr. Ashok Saxena & Mrs. Suman Saxena');
   await expect(page.locator('#hosts')).toContainText('Mr. Kritik Saxena & Mrs. Avantika Saxena');
   await expect(page.locator('.timeline li')).toHaveText([/6:30 PM.*Welcome/, /7:00 PM.*Cake Cutting/, /8:00 PM.*Dinner/]);
@@ -47,14 +46,16 @@ test('renders every section in order, noindex, variant A by default', async ({ p
   await expect(page.locator('#switcher')).toHaveCount(0);
 });
 
-test('?variant=C switches look; unknown variant falls back to A', async ({ page }) => {
+test('?variant=C switches look; ?theme=A shows the arch; unknown variant falls back to S', async ({ page }) => {
   await open(page, { query: '?variant=C' });
   await expect(page.locator('body')).toHaveClass(/\bC\b/);
   await expect(page.locator('.C-hero .polaroid')).toBeVisible();
   await expect(page.locator('.C-months .pc')).toHaveCount(12);
+  await page.goto('/?theme=A');
+  await expect(page.locator('#arch .b').first()).toBeAttached();
   await page.goto('/?variant=Z');
-  await expect(page.locator('body')).toHaveClass(/\bA\b/);
-  await expect(page.locator('.A-months .m')).toHaveCount(12);
+  await expect(page.locator('body')).toHaveClass(/\bS\b/);
+  await expect(page.locator('.S-months .m')).toHaveCount(12);
 });
 
 for (const v of ['R', 'S']) {
@@ -209,6 +210,28 @@ test('Wishes Wall loads newest-first from the server', async ({ page }) => {
   await expect(page.locator('.wall .wish').first()).toContainText('Nani');
 });
 
+test('Wishes Wall: 5 per page, no total count; new wish jumps to page 1', async ({ page }) => {
+  const wishes = Array.from({ length: 12 }, (_, i) => ({ name: `Guest ${i + 1}`, message: `Wish ${i + 1}`, ts: Date.parse('2026-11-01') - i * 864e5 }));
+  await open(page, { wishes, postDelay: 300 });
+  const pager = page.locator('#wishes .pager');
+  await expect(page.locator('.wall .wish')).toHaveCount(5);
+  await expect(page.locator('#wishes')).not.toContainText('12 wishes');
+  await expect(pager.locator('.pg-info')).toHaveText('Page 1 of 3');
+  await expect(pager.getByRole('button', { name: /Newer/ })).toBeDisabled();
+  await pager.getByRole('button', { name: /Older/ }).click();
+  await pager.getByRole('button', { name: /Older/ }).click();
+  await expect(pager.locator('.pg-info')).toHaveText('Page 3 of 3');
+  await expect(page.locator('.wall .wish')).toHaveCount(2);
+  await expect(page.locator('.wall .wish').first()).toContainText('Wish 11');
+  await expect(pager.getByRole('button', { name: /Older/ })).toBeDisabled();
+  const form = page.locator('#wish-form');
+  await form.getByLabel('Your name').fill('Dadi');
+  await form.getByLabel('Your wish').fill('Jeete raho');
+  await form.getByRole('button', { name: /Send wish/ }).click();
+  await expect(pager.locator('.pg-info')).toHaveText('Page 1 of 3');
+  await expect(page.locator('.wall .wish').first()).toContainText('Jeete raho');
+});
+
 test('Wish shows instantly, as plain text, before the server confirms', async ({ page }) => {
   const posts = await open(page, { postDelay: 1500 });
   await expect(page.locator('.wall-note')).toHaveText('Be the first to leave a wish 💌');
@@ -254,11 +277,10 @@ test('without a backend URL, Wishes say "opening soon"', async ({ page }) => {
   await expect(page.locator('#wish-form')).toBeHidden();
 });
 
-test('12 Little Birthdays: 11 months + party tile; missing months show "Coming soon"', async ({ page }) => {
+test('12 Little Birthdays: 11 month photos + party tile', async ({ page }) => {
   await open(page);
   await expect(page.locator('#months .m')).toHaveCount(12);
-  await expect(page.locator('#months .photo-ph')).toHaveCount(3);
-  await expect(page.locator('#months .photo-ph').first()).toContainText('Coming soon');
+  await expect(page.locator('#months .photo-ph')).toHaveCount(0);
   await expect(page.locator('#months .big')).toContainText('1 year!');
 });
 
@@ -281,16 +303,14 @@ test('gallery: tap enlarges; tap, Esc and back close', async ({ page }) => {
   await expect(page).toHaveURL(/localhost:4173\/$/);
 });
 
-test('month photos enlarge and browse only months; placeholders do not open', async ({ page }) => {
+test('month photos enlarge and browse only months', async ({ page }) => {
   await open(page);
   const lb = page.locator('#lightbox');
-  await page.locator('#months .photo-ph').first().click();
-  await expect(lb).toBeHidden();
   await page.locator('#months [data-zoom]').first().click();
   await expect(lb).toBeVisible();
   await expect(lb.locator('img')).toHaveAttribute('src', /assets\/photos\/lg\//);
-  await expect(lb.locator('figcaption')).toContainText('4 months · 4 Apr');
-  await expect(lb.locator('figcaption')).toContainText('1 / 8');
+  await expect(lb.locator('figcaption')).toContainText('1 month · 4 Jan');
+  await expect(lb.locator('figcaption')).toContainText('1 / 11');
   await page.keyboard.press('ArrowLeft');
   await expect(lb.locator('figcaption')).toContainText('11 months');
   await page.keyboard.press('Escape');
@@ -306,7 +326,7 @@ test('venue, calendar and WhatsApp share links', async ({ page }) => {
   expect(cal).toContain('dates=20261204T130000Z%2F20261204T163000Z');
   expect(cal).toContain('Evergreen+Compound');
   const share = await page.locator('#share').getAttribute('href');
-  expect(share).toMatch(/^https:\/\/wa\.me\/\?text=/);
+  expect(share).toMatch(/^https:\/\/api\.whatsapp\.com\/send\?text=/);
   expect(decodeURIComponent(share)).toContain('https://s-ritik.github.io/avkrit-first-birthday/');
 });
 

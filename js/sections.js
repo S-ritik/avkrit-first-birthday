@@ -288,7 +288,10 @@ const venueSec = () => `
 
 function galleryIds() {
   const used = new Set([C_.hero.id, C_.littleGanesh.id, ...C_.months.map(monthId)]);
-  return (typeof PHOTOS === 'undefined' ? [] : PHOTOS).filter((p) => !used.has(p.id) && !p.id.startsWith('months/'));
+  const key = (p) => { const t = photoDate(p.id); return t ? t.y * 1e4 + t.mo * 100 + t.d : 0; }; // undated first
+  return (typeof PHOTOS === 'undefined' ? [] : PHOTOS)
+    .filter((p) => !used.has(p.id) && !p.id.startsWith('months/'))
+    .sort((a, b) => key(a) - key(b));
 }
 
 const gallerySec = () => {
@@ -331,9 +334,12 @@ const wishesSec = () => `
     </form>
     <p class="soon" hidden>The Wishes Wall opens soon.</p>
     <div class="board">
-      <div class="board-head"><span class="board-title">Wishes Wall</span><b class="board-count"></b></div>
+      <div class="board-head"><span class="board-title">Wishes Wall</span></div>
       <ul class="wall" aria-live="polite"></ul>
       <p class="wall-note"></p>
+      <nav class="pager" aria-label="Wishes pages" hidden>
+        <button type="button" class="pg-prev">‹ Newer</button><span class="pg-info"></span><button type="button" class="pg-next">Older ›</button>
+      </nav>
     </div>
   </section>`;
 

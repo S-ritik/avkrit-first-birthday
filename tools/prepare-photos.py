@@ -21,8 +21,8 @@ from PIL import Image, ImageOps
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "photos"
 OUT = ROOT / "assets" / "photos"
-HERO_ID = "img-20260807-wa0018"   # keep in sync with CONTENT.hero in js/content.js
-HERO_FOCUS_Y = 0.30              # vertical focal point for the OG crop
+HERO_ID = "whatsapp-image-2026-11-09-at-12-26-01-am"   # keep in sync with CONTENT.hero in js/content.js
+HERO_FOCUS_Y = 0.35           # vertical focal point for the OG crop
 SIZES = {"sm": (640, 76), "lg": (1600, 80)}
 EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 

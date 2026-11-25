@@ -209,8 +209,6 @@ form .btn{justify-self:center;min-width:200px}
 .board-head{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 10px;margin:0 0 18px}
 .board-title{font:var(--head-w) 22px/1.1 var(--head);color:var(--h2,var(--ink))}
 .board-title::before,.board-title::after{content:"✨";margin:0 6px;font-size:.8em}
-.board-count{font:600 12px/1 Fredoka,sans-serif;padding:5px 10px;border-radius:99px;background:var(--accent);color:var(--accent-ink);letter-spacing:.5px}
-.board-count:empty{display:none}
 .wall{list-style:none;margin:0;padding:0;display:grid;gap:18px;text-align:left}
 .wish{--wc:var(--w0);position:relative;display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start;
   padding:16px 18px 14px 14px;border-radius:18px;rotate:var(--tilt,0deg);overflow-wrap:anywhere;
@@ -229,6 +227,10 @@ form .btn{justify-self:center;min-width:200px}
 .w-stk{position:absolute;right:-8px;top:-14px;font-size:26px;line-height:1;rotate:14deg;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2));pointer-events:none}
 .wish.pending{opacity:.6}
 .wall-note{color:var(--muted);font-size:14px;margin:10px 0}
+.pager{display:flex;align-items:center;justify-content:center;gap:12px;margin:6px 0 10px}
+.pager button{font:600 14px/1 Fredoka,sans-serif;padding:9px 14px;border:0;border-radius:99px;cursor:pointer;background:var(--accent);color:var(--accent-ink,#fff)}
+.pager button:disabled{opacity:.35;cursor:default}
+.pg-info{font-size:13px;color:var(--muted);min-width:84px}
 @media (prefers-reduced-motion:no-preference){
   .w-stk{animation:stk-bob 3s ease-in-out infinite}
   .wish:nth-child(even) .w-stk{animation-delay:-1.5s}}
@@ -495,8 +497,8 @@ form .btn{justify-self:center;min-width:200px}
 .C .board-head{width:fit-content;margin:-6px auto 22px;padding:6px 18px 4px;background:#fffdf5;rotate:-2deg;box-shadow:0 4px 8px rgba(0,0,0,.2)}
 .C .board-title{font:700 30px/1 Caveat,cursive;color:#3a3550}
 .C .board-title::before,.C .board-title::after{content:"📌"}
-.C .board-count{font-family:Caveat,cursive;font-size:16px;background:var(--accent)}
 .C .wall-note{color:#fffdf5;font:700 20px Caveat,cursive}
+.C .pg-info{color:#fffdf5}
 .C .wish{--note:#fff4b0;rotate:calc(var(--tilt,0deg) * 2.2);border-radius:2px 2px 18px 2px;padding-top:22px;
   background:repeating-linear-gradient(transparent 0 26px,rgba(91,127,214,.16) 26px 27px) 0 18px,var(--note);
   box-shadow:0 10px 16px rgba(60,30,0,.28),inset 0 -14px 18px -12px rgba(0,0,0,.08)}

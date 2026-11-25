@@ -6,7 +6,7 @@ const CONTENT = {
 
   // Look of the Invite: 'A' Balloon Arch, 'C' Storybook Polaroid, 'R' Royal Prince, 'S' Superhero.
   // ?theme=R in the link overrides it. themePicker: true shows the 🎨 switcher; set false before sending.
-  theme: 'A',
+  theme: 'S',
   themePicker: true,
 
   // Paste the Apps Script web app URL (ends in /exec) after deploying backend/Code.gs.
@@ -33,7 +33,7 @@ const CONTENT = {
     translation: 'O Lord with the curved trunk and mighty form, radiant as a million suns, remove every obstacle from all our work, always.',
   },
 
-  hero: { id: 'img-20260807-wa0018', pos: '50% 40%' },          // #23
+  hero: { id: 'whatsapp-image-2026-11-09-at-12-26-01-am', pos: '50% 35%' },
   littleGanesh: { id: 'img-20260915-wa0004', pos: '50% 22%' },  // #30, Avkrit dressed as Ganesh
 
   // Catchy lines. Edit freely; an empty string hides that line.
@@ -58,18 +58,35 @@ const CONTENT = {
 
   // Month n = the 4th of each month (born 4 Dec 2025). id null -> photos/months/mNN.jpg. tag = playful caption.
   months: [
-    { n: 1, date: '4 Jan', id: null, tag: 'Hello, 2026!' },
-    { n: 2, date: '4 Feb', id: null, tag: 'Who needs sleep?' },
-    { n: 3, date: '4 Mar', id: null, tag: 'First Holi' },
+    { n: 1, date: '4 Jan', id: 'whatsapp-image-2026-11-24-at-9-51-12-pm', pos: '92% 50%', tag: 'Hello, 2026!' },
+    { n: 2, date: '4 Feb', id: 'whatsapp-image-2026-11-25-at-12-15-56-am-2', pos: '72% 50%', tag: 'Who needs sleep?' },
+    { n: 3, date: '4 Mar', id: 'img-20260226-wa0003', pos: '50% 55%', tag: 'Tummy-time pro' },
     { n: 4, date: '4 Apr', id: 'img-20260408-wa0008', pos: '50% 50%', tag: 'On a roll' },
     { n: 5, date: '4 May', id: 'img-20260504-wa0003-1', pos: '50% 30%', tag: 'Mischief loading' },
     { n: 6, date: '4 Jun', id: 'img-20260605-wa0026', pos: '50% 40%', tag: 'Halfway to one!' },
-    { n: 7, date: '4 Jul', id: 'img-20260705-wa0003', pos: '50% 20%', tag: 'First monsoon' },
+    { n: 7, date: '4 Jul', id: 'img-20260705-wa0002', pos: '50% 62%', tag: 'First monsoon' },
     { n: 8, date: '4 Aug', id: 'img-20260804-wa0019', pos: '50% 50%', tag: 'Zero chill mode' },
-    { n: 9, date: '4 Sep', id: 'img-20260904-wa0023', pos: '50% 30%', tag: "Bappa's on his way" },
+    { n: 9, date: '4 Sep', id: 'img-20260904-wa0026', pos: '50% 30%', tag: 'Little Kanha' },
     { n: 10, date: '4 Oct', id: 'img-20261004-wa0012', pos: '62% 60%', tag: 'Double digits!' },
     { n: 11, date: '4 Nov', id: 'whatsapp-image-2026-11-04-at-11-33-41-pm', pos: '50% 70%', tag: '30 days to cake!' },
   ],
+
+  // Real dates for photos whose filename date is wrong (old photos forwarded on 24-25 Nov).
+  // null = date unknown: no caption, shown first in the gallery.
+  photoDates: {
+    'whatsapp-image-2026-11-25-at-12-15-54-am-1': '2026-01-01', // Happy New Year
+    'whatsapp-image-2026-11-25-at-12-15-55-am': '2026-01-14',   // Makar Sankranti
+    'whatsapp-image-2026-11-25-at-12-15-56-am': '2026-01-26',   // Republic Day
+    'whatsapp-image-2026-11-25-at-12-16-28-am': '2026-02-15',   // Mahashivratri
+    'whatsapp-image-2026-11-24-at-4-14-47-pm': null,
+    'whatsapp-image-2026-11-24-at-4-16-02-pm': null,
+    'whatsapp-image-2026-11-24-at-4-17-12-pm': null,
+    'whatsapp-image-2026-11-24-at-9-51-13-pm': null,
+    'whatsapp-image-2026-11-25-at-12-15-54-am': null,
+    'whatsapp-image-2026-11-25-at-12-19-12-am': null,
+    'whatsapp-image-2026-11-25-at-12-20-49-am': null,
+    'whatsapp-image-2026-11-25-at-12-23-40-am': null,
+  },
 
   // "First year in numbers" tiles under the months. Swap in real milestones if you like
   // (e.g. { value: '9 mo', label: 'first steps' }, { value: 'Mumma', label: 'first word' }).
@@ -99,39 +116,35 @@ const CONTENT = {
   venue: { name: 'Evergreen Compound', mapUrl: 'https://maps.app.goo.gl/F8G3ykAbDrE7Ar128' },
 
   // Text sent by the "Share on WhatsApp" button. *word* is bold in WhatsApp.
-  // Order: title, Invite link, Hindi, English, wishes reminder, map link.
-  // The Invite link goes first because WhatsApp builds its preview card from the first link.
+  // Order: blessing, title, Invite link, Hindi, English, wishes reminder, venue link.
+  // The Invite link comes before the venue link because WhatsApp builds its preview card from the first link.
+  // Emojis only at the start of header and detail lines, never inside sentences.
   shareText: {
+    blessing: '🙏 *‖ श्री गणेशाय नमः ‖* 🙏',
     title: '🎈🎂 *Avkrit\'s 1st Birthday* 🎂🎈',
     hi: [
-      '🙏 *‖ श्री गणेशाय नमः ‖* 🙏',
-      '',
-      '💐 आप सपरिवार सादर आमंत्रित हैं 💐',
-      'हमारे लाडले 👑 *अवकृत* 👑 का *पहला जन्मदिन* है 🥳',
+      'आप सपरिवार सादर आमंत्रित हैं।',
+      'हमारे लाडले अवकृत का पहला जन्मदिन है।',
       '',
       '📅 शुक्रवार, 4 दिसंबर 2026',
       '⏰ शाम 6:30 बजे से',
       '📍 एवरग्रीन कंपाउंड',
-      '🎂 केक कटिंग: शाम 7:00 बजे',
-      '🍽️ भोजन: रात 8:00 बजे',
       '',
-      'आपकी उपस्थिति और आशीर्वाद की प्रतीक्षा रहेगी 🙏',
+      'आपकी उपस्थिति और आशीर्वाद की प्रतीक्षा रहेगी।',
     ],
     en: [
-      '💐 You and your family are warmly invited 💐',
-      'to celebrate 👑 *Avkrit\'s 1st birthday* 👑 🥳',
+      'You and your family are warmly invited',
+      'to celebrate Avkrit\'s 1st birthday.',
       '',
       '📅 Friday, 4 December 2026',
       '⏰ 6:30 PM onwards',
       '📍 Evergreen Compound',
-      '🎂 Cake cutting: 7:00 PM',
-      '🍽️ Dinner: 8:00 PM',
       '',
-      'Please come and bless our little prince 🙏',
+      'Please come and bless our little prince.',
     ],
     wishReminder: [
-      '💌 इनवाइट पेज के सबसे नीचे अवकृत के लिए अपनी शुभकामना ज़रूर लिखें!',
-      '💌 Don\'t forget to leave a wish for Avkrit at the bottom of the invite page!',
+      'इनवाइट पेज के सबसे नीचे अवकृत के लिए अपनी शुभकामना ज़रूर लिखें!',
+      'Don\'t forget to leave a wish for Avkrit at the bottom of the invite page!',
     ],
   },
 

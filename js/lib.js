@@ -31,7 +31,8 @@ const BORN_MS = Date.parse(`${CONTENT.born}T00:00:00+05:30`);
 const MONTHS3 = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function photoDate(id) {
-  const m = /(\d{4})-?(\d{2})-?(\d{2})/.exec(id);
+  const fixed = CONTENT.photoDates || {};
+  const m = /(\d{4})-?(\d{2})-?(\d{2})/.exec(id in fixed ? fixed[id] || '' : id);
   if (!m) return null;
   const [y, mo, d] = m.slice(1).map(Number);
   return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? { y, mo, d } : null;
@@ -66,14 +67,14 @@ function calendarUrl() {
 
 // api.whatsapp.com, not wa.me: the wa.me redirect garbles emojis outside the basic plane (📅 📍 🎂).
 const shareUrl = () => {
-  const { title, hi, en, wishReminder } = CONTENT.shareText;
+  const { blessing, title, hi, en, wishReminder } = CONTENT.shareText;
   const line = '✨━━━━━━━━━━━━✨';
   const text = [
-    title,
-    `👉 Invite / निमंत्रण: ${CONTENT.siteUrl}`,
-    '', ...hi, '', line, '', ...en, '', line, '',
+    blessing, '', title, '',
+    `👉 ${CONTENT.siteUrl}`,
+    '', '', ...hi, '', line, '', ...en, '', line, '',
     ...wishReminder, '',
-    `🗺️ Map / नक्शा: ${CONTENT.venue.mapUrl}`,
+    `Venue: ${CONTENT.venue.mapUrl}`,
   ].join('\n');
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
 };
