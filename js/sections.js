@@ -305,11 +305,11 @@ const gallerySec = () => {
     <div class="polas" data-zoom-group>
       ${galleryIds().map((p) => {
         const cap = photoCaption(p.id);
-        return `<button class="pola" type="button" data-id="${esc(p.id)}"${zoom(p.id, cap ? `${cap.date} · ${cap.age}` : C_.name, true)}
+        return `<button class="pola" type="button" data-id="${esc(p.id)}"${zoom(p.id, cap ? [cap.line, cap.date, cap.age].filter(Boolean).join(' · ') : C_.name, true)}
         style="--r:${((rnd() - 0.5) * 8).toFixed(1)}deg;--y:${Math.round(rnd() * 10)}px;--tr:${((rnd() - 0.5) * 16).toFixed(1)}deg;--tc:${['#ffe58a', '#ffc2d9', '#bfe6ff', '#c8f0b0'][Math.floor(rnd() * 4)]}">
         <span class="tape" aria-hidden="true"></span>
         <span class="ph" style="aspect-ratio:${p.w}/${p.h}">${photo(p.id, { alt: cap ? `${C_.name}, ${cap.date}` : C_.name })}</span>
-        ${cap ? `<span class="cap">${esc(cap.date)}<small>${esc(cap.age)}</small></span>` : ''}</button>`;
+        ${cap ? `<span class="cap">${esc(cap.date)}<small>${esc(cap.age)}</small>${cap.line ? `<em class="line">${esc(cap.line)}</em>` : ''}</span>` : ''}</button>`;
       }).join('')}
     </div>
   </section>`;

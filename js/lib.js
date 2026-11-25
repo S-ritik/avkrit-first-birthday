@@ -38,15 +38,18 @@ function photoDate(id) {
   return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? { y, mo, d } : null;
 }
 
-// "22 Feb" + "2 months old" for a photo id; null when the id carries no date.
+const plural = (n, unit) => `${n} ${unit}${n === 1 ? '' : 's'} old`;
+
+// "22 Feb" + "2 months old" (or "3 weeks old" / "6 days old" before 1 month) + optional line; null when undated.
 function photoCaption(id) {
   const t = photoDate(id);
   if (!t) return null;
   const b = new Date(BORN_MS + 5.5 * 3600e3); // IST calendar date of birth
   let months = (t.y - b.getUTCFullYear()) * 12 + (t.mo - 1 - b.getUTCMonth());
   if (t.d < b.getUTCDate()) months--;
-  const age = months < 1 ? 'a few weeks old' : `${months} month${months > 1 ? 's' : ''} old`;
-  return { date: `${t.d} ${MONTHS3[t.mo - 1]}`, age };
+  const days = Math.round((Date.UTC(t.y, t.mo - 1, t.d) - Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate())) / 864e5);
+  const age = months >= 1 ? plural(months, 'month') : days >= 7 ? plural(Math.floor(days / 7), 'week') : plural(days, 'day');
+  return { date: `${t.d} ${MONTHS3[t.mo - 1]}`, age, line: (CONTENT.photoLines || {})[id] || '' };
 }
 
 const daysOld = () => Math.max(0, Math.floor((now() - BORN_MS) / 864e5));

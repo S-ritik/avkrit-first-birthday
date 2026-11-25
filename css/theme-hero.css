@@ -192,6 +192,7 @@
 .S .pola .ph{border:2px solid #111}
 .S .pola .cap{font:400 20px/1 Bangers,sans-serif;letter-spacing:1px;color:#111}
 .S .pola .cap small{color:var(--muted)}
+.S .pola .cap .line{font:400 14px/1.15 Bangers,sans-serif;letter-spacing:.6px;color:var(--accent)}
 
 /* ============ wishes ============ */
 .S form{border-radius:10px;box-shadow:var(--pop),inset 0 8px 0 var(--yel),inset 0 11px 0 #111}
