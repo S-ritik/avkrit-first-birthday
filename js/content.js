@@ -78,14 +78,14 @@ const CONTENT = {
     'whatsapp-image-2026-11-25-at-12-15-55-am': '2026-01-14',   // Makar Sankranti
     'whatsapp-image-2026-11-25-at-12-15-56-am': '2026-01-26',   // Republic Day
     'whatsapp-image-2026-11-25-at-12-16-28-am': '2026-02-15',   // Mahashivratri
-    'whatsapp-image-2026-11-24-at-4-14-47-pm': null,
-    'whatsapp-image-2026-11-24-at-4-16-02-pm': null,
-    'whatsapp-image-2026-11-24-at-4-17-12-pm': null,
-    'whatsapp-image-2026-11-24-at-9-51-13-pm': null,
-    'whatsapp-image-2026-11-25-at-12-15-54-am': null,
-    'whatsapp-image-2026-11-25-at-12-19-12-am': null,
-    'whatsapp-image-2026-11-25-at-12-20-49-am': null,
-    'whatsapp-image-2026-11-25-at-12-23-40-am': null,
+    'whatsapp-image-2026-11-24-at-4-14-47-pm': '2026-06-17',
+    'whatsapp-image-2026-11-24-at-4-16-02-pm': '2026-05-02',
+    'whatsapp-image-2026-11-24-at-4-17-12-pm': '2026-05-12',
+    'whatsapp-image-2026-11-24-at-9-51-13-pm': '2026-02-20',
+    'whatsapp-image-2026-11-25-at-12-15-54-am': '2025-12-10',
+    'whatsapp-image-2026-11-25-at-12-19-12-am': '2026-03-04',
+    'whatsapp-image-2026-11-25-at-12-20-49-am': '2026-03-18',
+    'whatsapp-image-2026-11-25-at-12-23-40-am': '2026-01-04',
   },
 
   // "First year in numbers" tiles under the months. Swap in real milestones if you like
